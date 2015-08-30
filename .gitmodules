@@ -1,0 +1,3 @@
+[submodule "audio-analyzer"]
+	path = audio-analyzer
+	url = https://github.com/jczimm/audio-analyzer.git
