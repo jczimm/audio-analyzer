@@ -1,3 +1,3 @@
-# multitrack-audio-visualizer
+# Audio Analyzer for MAV
 
-Desktop program that visualizes volume and spectrogram data for multiple tracks in a DAW
+Desktop application that analyzes the freezes of all tracks in an Ableton Live set and generates a folder of .afa files (one file for each track).

@@ -1,5 +1,5 @@
 {
-  "name": "multitrack-audio-visualizer",
+  "name": "audio-analyzer",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -8,12 +8,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jczimm/multitrack-audio-visualizer.git"
+    "url": "https://github.com/jczimm/audio-analyzer.git"
   },
   "author": "jczimm",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jczimm/multitrack-audio-visualizer/issues"
+    "url": "https://github.com/jczimm/audio-analyzer/issues"
   },
-  "homepage": "https://github.com/jczimm/multitrack-audio-visualizer"
+  "homepage": "https://github.com/jczimm/audio-analyzer",
+  "devDependencies": {
+    "electron-prebuilt": "^0.31.1"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "rmdir": "^1.1.0",
+    "web-audio-analyser": "^2.0.0"
+  }
 }
