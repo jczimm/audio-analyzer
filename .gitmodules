@@ -1,3 +1,6 @@
 [submodule "audio-analyzer"]
 	path = audio-analyzer
 	url = https://github.com/jczimm/audio-analyzer.git
+[submodule "afa-file"]
+	path = afa-file
+	url = https://github.com/jczimm/afa-file.git
