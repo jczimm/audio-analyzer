@@ -20,8 +20,10 @@
     "electron-prebuilt": "^0.31.1"
   },
   "dependencies": {
+    "afa-file": "^1.0.0",
+    "fs-extra": "^0.24.0",
     "jquery": "^2.1.4",
-    "rmdir": "^1.1.0",
+    "normalize-to-range": "^1.2.3",
     "web-audio-analyser": "^2.0.0"
   }
 }
