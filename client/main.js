@@ -55,5 +55,11 @@ function saveDataToFile(afaData, url, analyzer) {
 		data: afaData // array of Uint8Array's
 	});
 
-	fs.writeFileSync(dest, file.toString(), "utf8");
+	file.toGzipped()
+		.then(function(gzipped) {
+			fs.writeFileSync(dest, gzipped, "utf8");
+		})
+		.catch(function(err) {
+			console.error("ERR while gzipping .afa file:", err);
+		});
 }
