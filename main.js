@@ -1,21 +1,17 @@
 var app = require('app');  // Module to control application life.
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
 
-var fs = require('fs');
+var fs = require('fs-extra');
 var path = require('path');
-
-var rmdir = require('rmdir');
 
 var tmpDir = path.resolve(__dirname, 'tmp');
 
-var NNMSFUNC = function() {};
-
 // Remove tmp folder
-rmdir(tmpDir, NNMSFUNC);
+fs.removeSync(tmpDir);
 
 // Recreate tmp folder
 if (!fs.existsSync(tmpDir)) {
-    fs.mkdirSync(tmpDir);
+		fs.mkdirSync(tmpDir);
 }
 
 // Report crashes to our server.
@@ -51,6 +47,6 @@ app.on('ready', function() {
 		mainWindow = null;
 
 		// Remove tmp folder
-		rmdir(tmpDir, NNMSFUNC);
+		fs.removeSync(tmpDir);
 	});
 });

@@ -1,10 +1,19 @@
 var path = require('path');
 
-var rmdir = require('rmdir');
+var fs = require('fs-extra');
 
 // GENERAL UTILITIES
 
 var util = {};
+
+util.normalize = function(arr, factor) {
+	var min = Math.min.apply(Math, arr), max = Math.max.apply(Math, arr);
+	return new Uint8Array(
+		[].slice.call(arr).map(function(val) {
+		    return (val - min) / (max - min) * (factor || 100);
+		})
+	);
+};
 
 util.copyFile = function(sourcePath, destDir) {
 	return new Promise(function(resolve, reject) {
@@ -47,7 +56,7 @@ util.tmp.copyFilesToTmp = function(filePaths) {
 };
 
 util.tmp.cleanUp = function() {
-	rmdir(util.tmp.path);
+	fs.removeSync(util.tmp.path);
 };
 
 //
