@@ -1,0 +1,197 @@
+$red: rgb(255, 82, 82);
+$offwhite: #fafafa;
+$dark-grey-bg: #666;
+$grey-accent: #bbb;
+$grey-accent2: #aaa;
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic);
+* {
+    box-sizing: border-box;
+}
+
+html > body {
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
+    /* -- */
+    user-select: none;
+}
+
+
+/* --- */
+
+header {
+    background-color: #fafafa !important;
+    color: #222 !important;
+    -webkit-app-region: drag;
+}
+
+main {
+    background-color: $dark-grey-bg;
+    height: 100%;
+}
+
+nav {
+    margin-right: 3em;
+    > * {
+        -webkit-app-region: no-drag;
+    }
+}
+
+
+/* -- */
+
+.u-no-pointer-events {
+    pointer-events: none;
+}
+
+
+/* -- */
+
+ul.mdl-menu.main > li {
+    span[class*=__label] {
+        bottom: 10px;
+    }
+    > div.mdl-slider__container {
+        top: 16px;
+    }
+    #pointsPerSecondCounter {
+        position: absolute;
+        text-align: right;
+        width: 100%;
+        right: 0;
+        padding-right: 1em;
+        > span.inner {
+            font-weight: 600;
+        }
+    }
+
+    input#dest {
+        display: none;
+    }
+    #destLabel {
+        position: absolute;
+        text-align: right;
+        width: 100%;
+        right: 0;
+        padding-right: 1em;
+    }
+}
+
+
+/* -- */
+
+#exit-button {
+    margin-left: -2em;
+    margin-right: 2em;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    &:hover,
+    &:active {
+        color: $red;
+        /*color: $offwhite*/
+    }
+}
+
+
+/* -- */
+
+button.mdl-button.action-button {
+    position: fixed auto 0.7em 0.7em auto;
+    bottom: -100%;
+    transition: .3s bottom ease-out;
+}
+
+button#stop-button {
+    display: none;
+}
+
+
+/* prevent header from disappearing on screens < 1024px wide */
+
+.mdl-layout__header {
+    display: block !important;
+}
+
+
+/* --- */
+
+.page-content {
+    padding: 2em;
+    height: calc(100% - 4em);
+    /*color: $offwhite*/
+}
+
+#interface {
+    width: 100%;
+    height: 100%;
+    > #track-list {
+        width: 100%;
+        margin-top: -2em;
+        background-color: transparent;
+        tr {
+            -webkit-transition: .1s color;
+            -moz-transition: .1s color;
+            -o-transition: .1s color;
+            transition: .1s color;
+            &:not(.is-selected):not(:hover) {
+                color: #ddd;
+            }
+        }
+        > thead {
+            display: none;
+        }
+        td.label {
+            text-align: left;
+        }
+        .mdl-progress.analysis-progress {
+            position: absolute auto 0 auto 0;
+            transform: translateY(3.4em);
+            width: 100%;
+        }
+    }
+    &.blank {
+        border: 4px dashed $grey-accent;
+        padding: 2em;
+        > #track-list {
+            display: none;
+        }
+    }
+}
+
+
+/* blank state */
+
+input#upload {
+    display: none;
+}
+
+#interface {
+    > .blank-state {
+        color: $grey-accent2;
+        opacity: 0;
+        text-align: center;
+        position: relative;
+        top: 40%;
+        /*transform: translateY(-50%);*/
+        transition: .2s opacity;
+        > #blank-state-text {
+            font-size: 2em;
+            cursor: context-menu;
+        }
+    }
+    &.blank {
+        > .blank-state {
+            opacity: 1;
+        }
+    }
+    &:not(.blank) {
+        > button.mdl-button.action-button {
+            bottom: 0.7em;
+        }
+    }
+}
+
+
+/* snackbars */
+
+.snackbar.error {
+    background-color: $red;
+}
