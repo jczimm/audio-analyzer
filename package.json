@@ -1,29 +1,60 @@
 {
   "name": "audio-analyzer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "bash postinstall.sh",
+    "start": "electron ./app",
+    "dev": "gulp serve",
+    "clean": "rm -rf ./dist",
+    "clean:osx": "rm -rf ./dist/osx",
+    "clean:win": "rm -rf ./dist/win",
+    "build": "npm run build:osx && npm run build:win",
+    "build:client": "gulp build",
+    "build:osx": "npm run build:client && npm run clean:osx && electron-packager ./app \"Audio Analyzer for MAV\" --ignore=\"node_modules/(^electron|^gulp|^babel|^forever|^jshint)\" --out=dist/osx --platform=darwin --arch=x64 --version=0.33.0 --icon=assets/osx/audio-analyzer.icns",
+    "build:win": "npm run build:client && npm run clean:win && electron-packager ./app \"Audio Analyzer for MAV\" --ignore=\"node_modules/(^electron|^gulp|^babel|^forever|^jshint)\" --out=dist/win --platform=win32 --arch=ia32 --version=0.33.0 --icon=assets/win/icon.ico",
+    "pack": "npm run pack:osx && npm run pack:win",
+    "pack:osx": "electron-builder \"dist/osx/Audio Analyzer for MAV.app\" --platform=darwin --out=\"dist/osx\" --config=packager.json",
+    "pack:win": "electron-builder \"dist/win/Audio Analyzer for MAV-win32-ia32\" --platform=win --out=\"dist/win\" --config=packager.json",
+    "export": "npm run export:osx && npm run export:win",
+    "export:osx": "npm run build:osx && npm run pack:osx",
+    "export:win": "npm run build:win && npm run pack:win"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/jczimm/audio-analyzer.git"
   },
-  "author": "jczimm",
+  "author": "Jacob Zimmerman <jczimm@jczimm.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jczimm/audio-analyzer/issues"
   },
   "homepage": "https://github.com/jczimm/audio-analyzer",
-  "devDependencies": {
-    "electron-prebuilt": "^0.31.1"
-  },
   "dependencies": {
-    "afa-file": "^1.0.0",
+    "afa-file": "^1.0.4",
     "fs-extra": "^0.24.0",
     "jquery": "^2.1.4",
-    "normalize-to-range": "^1.2.3",
+    "stripcolorcodes": "^0.1.0",
     "web-audio-analyser": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.23",
+    "electron-builder": "^2.0.0",
+    "electron-connect": "^0.3.2",
+    "electron-packager": "^5.1.0",
+    "electron-prebuilt": "^0.33.0",
+    "forever": "^0.15.1",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.0.1",
+    "gulp-babel": "^5.2.1",
+    "gulp-changed": "^1.3.0",
+    "gulp-if": "^1.2.5",
+    "gulp-ignore": "^1.2.1",
+    "gulp-jshint": "^1.11.2",
+    "gulp-rucksack": "^0.1.2",
+    "gulp-sass": "^2.1.0-beta",
+    "gulp-util": "^3.0.6",
+    "jshint-stylish": "^2.0.1"
   }
 }
