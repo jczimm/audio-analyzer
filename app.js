@@ -74,7 +74,8 @@ app.on('ready', function() {
         height: 450,
         frame: false,
         resizable: true, // false,
-        title: "Audio Analyzer for MAV"
+        title: "Audio Analyzer for MAV",
+        icon: "./assets/win/icon.ico"
     });
 
     // and load the index.html of the app.
