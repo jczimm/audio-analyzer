@@ -1,0 +1,16 @@
+{
+  "osx" : {
+    "title": "Audio Analyzer for MAV",
+    "background": "assets/osx/installer.png",
+    "icon": "assets/osx/audio-analyzer.icns",
+    "icon-size": 80,
+    "contents": [
+      { "x": 438, "y": 344, "type": "link", "path": "/Applications" },
+      { "x": 192, "y": 344, "type": "file" }
+    ]
+  },
+  "win" : {
+    "title" : "Audio Analyzer for MAV",
+    "icon" : "assets/win/icon.ico"
+  }
+}
