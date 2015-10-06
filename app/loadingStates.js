@@ -17,3 +17,4 @@ loadingStates.createProgressBar = function (progressClass) {
 
 exports["default"] = loadingStates;
 module.exports = exports["default"];
+//# sourceMappingURL=loadingStates.js.map

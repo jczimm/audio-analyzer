@@ -1,6 +1,10 @@
 /* jshint esnext: true */
 
 import ipc from 'ipc';
+import remote from 'remote';
+
+const dialog = remote.require('dialog');
+const browserWindow = remote.getCurrentWindow();
 
 class FilePickerDialog {
 	constructor() {
@@ -8,7 +12,10 @@ class FilePickerDialog {
 	}
 
 	pick() {
-		this.paths = ipc.sendSync("file-picker", "open") || [];
+		this.paths = dialog.showOpenDialog(browserWindow, {
+            title: "Select Destination for Analysis Files",
+            properties: ["openDirectory"]
+        }) || [];
 		return this.paths;
 	}
 }

@@ -34,3 +34,4 @@ var FileWriter = (function () {
 
 exports['default'] = FileWriter;
 module.exports = exports['default'];
+//# sourceMappingURL=fileWriter.js.map

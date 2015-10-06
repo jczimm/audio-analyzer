@@ -1,8 +1,13 @@
 $red: rgb(255, 82, 82);
 $offwhite: #fafafa;
 $dark-grey-bg: #666;
+$darker-grey-bg: #333;
 $grey-accent: #bbb;
 $grey-accent2: #aaa;
+
+$theme-color: rgb(63,81,181);
+$accent: rgb(255,110,64);
+
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic);
 * {
     box-sizing: border-box;
@@ -62,7 +67,6 @@ ul.mdl-menu.main > li {
             font-weight: 600;
         }
     }
-
     input#dest {
         display: none;
     }
@@ -119,6 +123,10 @@ button#stop-button {
     /*color: $offwhite*/
 }
 
+input#upload {
+    display: none;
+}
+
 #interface {
     width: 100%;
     height: 100%;
@@ -127,9 +135,6 @@ button#stop-button {
         margin-top: -2em;
         background-color: transparent;
         tr {
-            -webkit-transition: .1s color;
-            -moz-transition: .1s color;
-            -o-transition: .1s color;
             transition: .1s color;
             &:not(.is-selected):not(:hover) {
                 color: #ddd;
@@ -145,25 +150,33 @@ button#stop-button {
             position: absolute auto 0 auto 0;
             transform: translateY(3.4em);
             width: 100%;
+
+            &.errored > .bar {
+                background-color: $red;
+            }
+
+            &.saving > .bar {
+                background-color: $accent;
+            }
         }
     }
-    &.blank {
-        border: 4px dashed $grey-accent;
-        padding: 2em;
-        > #track-list {
-            display: none;
+    div#banner {
+        display: block;
+        position: fixed auto auto 1em 1em;
+        padding: 0.5em;
+        height: 1.4em;
+        background-color: $darker-grey-bg;
+
+        > span {
+            color: $grey-accent;
+            font-size: 0.8em;
+            font-transform: uppercase;
         }
+
+        bottom: -100%;
+        transition: 0.3s bottom ease-out;
     }
-}
-
-
-/* blank state */
-
-input#upload {
-    display: none;
-}
-
-#interface {
+    // blank state
     > .blank-state {
         color: $grey-accent2;
         opacity: 0;
@@ -178,13 +191,25 @@ input#upload {
         }
     }
     &.blank {
+        border: 4px dashed $grey-accent;
+        padding: 2em;
+
         > .blank-state {
             opacity: 1;
+        }
+        > #track-list {
+            display: none;
         }
     }
     &:not(.blank) {
         > button.mdl-button.action-button {
             bottom: 0.7em;
+        }
+
+        &:not(.working) {
+            div#banner {
+                bottom: 1em;
+            }
         }
     }
 }

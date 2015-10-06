@@ -1,6 +1,9 @@
+var gutil = require('gulp-util');
+var stripColorCodes = require('stripcolorcodes');
+
 var util = {};
 
-util.invertGulpSrcPath = function(src) {
+util.invertGulpSrcPath = function invertGulpSrcPath(src) {
     if (typeof src === "string") src = [src];
 
     return src.map(function(path) {
@@ -14,7 +17,7 @@ util.invertGulpSrcPath = function(src) {
     });
 };
 
-util.uniq = function(a) {
+util.uniq = function uniq(a) {
     var seen = {},
     	out = [],
     	len = a.length;
@@ -28,6 +31,13 @@ util.uniq = function(a) {
         }
     }
     return out;
+};
+
+util.logErrorWithoutColorCodes = function logErrorWithoutColorCodes(error) {
+    error.message = stripColorCodes(error.message);
+    error.codeFrame = stripColorCodes(error.codeFrame);
+    var message = new gutil.PluginError('babel', error).toString();
+    process.stderr.write(message + '\n');
 };
 
 
