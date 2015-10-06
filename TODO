@@ -1,0 +1,30 @@
+Code Quality:
+
+  Refactoring:
+    ☐ standardize options-object paradigm across all functions
+      ☐ main.js
+      ☐ util.js
+      ☐ fileList.js
+      ☐ fileWriter.js
+      ☐ loadingStates.js
+      ☐ loadLibraries.js
+      ☐ notifications.js
+
+  ☐ clean up style.scss (make it more readable - organize)
+  
+
+UI:
+  TODO's related to the user interface of the program.
+
+    Track Analysis:
+     ✔ disable checkbox when analyzing a track @done (15-10-01 09:32)
+     ✔ when track analysis errs, turn progress bar red @done (15-10-01 09:38)
+     ☐ FIXME: show a progress bar when saving an .afa file (replace .analysis-progress with an accent-color bar)
+
+    General: 
+     ☐ display "drop more tracks here" banner at bottom of .interface:not(.blank):not(.working)
+     ☐ format Analysis Files Destination label
+
+Distribution:
+  ✔ fix packaging (in dist/win/Audio Analyzer for MAV-win32-ia32/, `electron` and .exe do not run app) @done (15-10-02 21:12)
+

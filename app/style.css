@@ -93,6 +93,9 @@ button#stop-button {
   height: calc(100% - 4em);
   /*color: $offwhite*/ }
 
+input#upload {
+  display: none; }
+
 #interface {
   width: 100%;
   height: 100%; }
@@ -102,7 +105,7 @@ button#stop-button {
     background-color: transparent; }
     #interface > #track-list tr {
       -webkit-transition: .1s color;
-      -o-transition: .1s color;
+              -o-transition: .1s color;
          transition: .1s color; }
       #interface > #track-list tr:not(.is-selected):not(:hover) {
         color: #ddd; }
@@ -121,38 +124,57 @@ button#stop-button {
               -o-transform: translateY(3.4em);
          transform: translateY(3.4em);
       width: 100%; }
+      #interface > #track-list .mdl-progress.analysis-progress.errored > .bar {
+        background-color: #ff5252; }
+      #interface > #track-list .mdl-progress.analysis-progress.saving > .bar {
+        background-color: #ff6e40; }
+  #interface div#banner {
+    display: block;
+    position: fixed;
+    top: auto;
+    right: auto;
+    bottom: 1em;
+    left: 1em;
+    padding: 0.5em;
+    height: 1.4em;
+    background-color: #333;
+    bottom: -100%;
+    -webkit-transition: 0.3s bottom ease-out;
+            -o-transition: 0.3s bottom ease-out;
+       transition: 0.3s bottom ease-out; }
+    #interface div#banner > span {
+      color: #bbb;
+      font-size: 0.8em;
+      font-transform: uppercase; }
+  #interface > .blank-state {
+    color: #aaa;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    text-align: center;
+    position: relative;
+    top: 40%;
+    /*transform: translateY(-50%);*/
+    -webkit-transition: .2s opacity;
+            -o-transition: .2s opacity;
+       transition: .2s opacity; }
+    #interface > .blank-state > #blank-state-text {
+      font-size: 2em;
+      cursor: context-menu; }
   #interface.blank {
     border: 4px dashed #bbb;
     padding: 2em; }
+    #interface.blank > .blank-state {
+      opacity: 1;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; }
     #interface.blank > #track-list {
       display: none; }
-
-/* blank state */
-input#upload {
-  display: none; }
-
-#interface > .blank-state {
-  color: #aaa;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  text-align: center;
-  position: relative;
-  top: 40%;
-  /*transform: translateY(-50%);*/
-  -webkit-transition: .2s opacity;
-          -o-transition: .2s opacity;
-     transition: .2s opacity; }
-  #interface > .blank-state > #blank-state-text {
-    font-size: 2em;
-    cursor: context-menu; }
-
-#interface.blank > .blank-state {
-  opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; }
-
-#interface:not(.blank) > button.mdl-button.action-button {
-  bottom: 0.7em; }
+  #interface:not(.blank) > button.mdl-button.action-button {
+    bottom: 0.7em; }
+  #interface:not(.blank):not(.working) div#banner {
+    bottom: 1em; }
 
 /* snackbars */
 .snackbar.error {
   background-color: #ff5252; }
+
+/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,16 @@
+{
+  "name": "audio-analyzer",
+  "productName": "Audio Analyzer for MAV",
+  "identifier": "com.jczimm.audio-analyzer",
+  "version": "0.1.0",
+  "description": "",
+  "main": "app.js",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+    "afa-file": "^1.0.4",
+    "fs-extra": "^0.24.0",
+    "jquery": "^2.1.4",
+    "web-audio-analyser": "^2.0.0"
+  }
+}

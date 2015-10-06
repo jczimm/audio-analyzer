@@ -103,7 +103,7 @@ function handleFileInputChange() {
     handleFiles($(this).get(0).files);
 }
 
-var maxConcurrentCtxs = 6;
+var maxConcurrentCtxs = 1;
 
 function handleProcessButtonClick() {
 
@@ -111,18 +111,18 @@ function handleProcessButtonClick() {
 
         // process the first batch of files
 
-        var numCompleted = 0,
+        var numProcessed = 0,
             firstFiles = _util2['default'].sliceObj(files, 0, maxConcurrentCtxs),
             nextFile;
 
         var beforeEachTrack = function beforeEachTrack() {
-            numCompleted++;
+            numProcessed++;
         };
 
         processFiles(firstFiles, beforeEachTrack, function oneTrackCompleted() {
             // for every track completed, process the next one on the queue and have `processFiles` call back
             // to this function after that track has completed
-            nextFile = _util2['default'].sliceObj(files, numCompleted, numCompleted + 1);
+            nextFile = _util2['default'].sliceObj(files, numProcessed, numProcessed + 1);
             if (nextFile !== {}) {
                 processFiles(nextFile, beforeEachTrack, oneTrackCompleted);
             } else {
@@ -133,6 +133,7 @@ function handleProcessButtonClick() {
 
     var start = function start() {
         working = true;
+        $interface.addClass('working');
 
         // hide #process-button, show #stop-button
         $("#process-button").hide();
@@ -219,7 +220,9 @@ function handleFiles(files) {
             // update interface
             $interface.removeClass("blank");
             $("#interface, div#upload-button, #interface #blank-state-text").off("click");
-        })['catch'](function (err) {
+        })
+        // errors are already handled in try..catch
+        ['catch'](function (err) {
             // console.log(err);
         });
     }
@@ -255,26 +258,6 @@ function prepareFiles(filePaths) {
     }, null, this, [[0, 9]]);
 }
 
-// return new Promise((resolve, reject) => {
-//     util.tmp.copyFilesToTmp(filePaths)
-//         .then((tmpFilePaths) => {
-
-//             // display files (automatically registers `filePath`'s and `entry`'s')
-//             Promise.all(tmpFilePaths.map(fileList.displayFile.bind(fileList)))
-//                 .then((filePaths) => {
-//                     resolve();
-//                 })
-//                 .catch((err) => {
-//                     console.error("ERR @ FileList.displayFile: ", err);
-//                     notifications.err(err.msg);
-//                     reject(err);
-//                 });
-
-//         })
-//         .catch((err) => {
-//             console.error("ERR @ util.copyFilesToTmp: ", err);
-//         });
-// });
 function processFiles(files, beforeEachTrack, oneTrackCompleted) {
     // set configuration variables to the values of the options' corresponding inputs in the interface
     var gzip = $("input#gzip").is(":checked"),
@@ -302,45 +285,86 @@ function processFiles(files, beforeEachTrack, oneTrackCompleted) {
         trackLength = file.trackLength;
 
         progressOpts = {
-            start: function start() {
-                // $progressBar.removeClass("mdl-progress__indeterminate");
-                this.$progressBar.addClass("current");
-            },
-            set: function set(progress) {
-                this.progressBar.setProgress(progress * 100);
-            },
-            error: function error() {
-                this.$progressBar.remove();
-                // TODO: make progress bar red instead
-            },
-            complete: function complete() {
-                // remove progress bar
-                this.$progressBar.remove();
+            analysis: {
+                start: function start() {
+                    // $progressBar.removeClass("mdl-progress__indeterminate");
+                    this.$progressBar.addClass("current");
 
-                // replace checkbox with a "done" icon (check mark)
-                var $icon = $("<i/>").addClass("icon material-icons").text("done");
-                this.$entry.find('> td:has(.mdl-checkbox)').html($icon);
+                    // disable checkbox, update through MDL
+                    this.$entry.find('> td.label > .mdl-checkbox input[type=checkbox]').prop("disabled", true).parent().get(0).MaterialCheckbox.checkDisabled();
+                },
+                set: function set(progress) {
+                    this.progressBar.setProgress(progress * 100);
+                },
+                error: function error() {
+                    this.$progressBar.addClass("errored");
+                },
+                complete: function complete() {
+                    this.$progressBar.removeClass("current");
+                }
+            },
+            save: {
+                start: function start() {
+                    this.$progressBar.fadeOut(100);
 
-                this.$progressBar.removeClass("current");
-                this.oneTrackCompleted();
+                    this.progressBar.setProgress(0);
+                    this.$progressBar.addClass("saving");
+
+                    this.$progressBar.fadeIn(100);
+                },
+                set: function set(progress) {
+                    this.progressBar.setProgress(progress * 100);
+                },
+                error: function error() {
+                    this.$progressBar.addClass("errored");
+                },
+                complete: function complete() {
+                    // remove progress bar
+                    this.$progressBar.remove();
+
+                    // replace checkbox with a "done" icon (check mark)
+                    var $icon = $("<i/>").addClass("icon material-icons").text("done");
+                    this.$entry.find('> td.label > .mdl-checkbox').remove().parent().append($icon);
+
+                    this.$progressBar.removeClass("current");
+                    this.oneTrackCompleted();
+                }
             }
+
         };
 
-        for (var method in progressOpts) {
-            progressOpts[method] = progressOpts[method].bind({
+        // bind each function with a context that provides reference to the current state of each of the
+        // relevant variables, as these variables will be overwritten in the next iteration of our^ for..in loop
+
+        var analysisOpts = progressOpts.analysis; // cache
+        for (var method in analysisOpts) {
+            analysisOpts[method] = analysisOpts[method].bind({
+                progressBar: progressBar, $progressBar: $progressBar, $entry: $entry
+            });
+        }
+
+        var saveOpts = progressOpts.save; // cache
+        for (var method in saveOpts) {
+            saveOpts[method] = saveOpts[method].bind({
                 progressBar: progressBar, $progressBar: $progressBar, $entry: $entry, oneTrackCompleted: oneTrackCompleted
             });
         }
 
+        // numProcessed++ so that when any track completes, the next available analysis will not process this one
         beforeEachTrack();
 
         analyzeAudioTrack({
             filePath: tmpFilePath,
             pointsPerSecond: pointsPerSecond,
             trackLength: trackLength,
-            progressBar: progressOpts
+            progressBar: analysisOpts
         }).then(function (results) {
-            saveDataToFile(results.analysis, results.sourcePath, gzip).then(function () {
+            saveDataToFile({
+                analysis: results.analysis,
+                sourcePath: results.sourcePath,
+                gzip: gzip,
+                progressBar: saveOpts
+            }).then(function () {
                 console.log("successfully saved .afa file for %c%s", "font-weight: 600; font-size: 1.2em;", _path2['default'].basename(tmpFilePath));
             })['catch'](function (err) {
                 _util2['default'].handleError(err);
@@ -411,7 +435,7 @@ function analyzeAudioTrack(_ref) {
 
             // clean up audio context
             analyzer.ctx.close().then(function () {
-                // remove progress bar, end progress loop
+                // end progress loop
                 progressBar.complete();
                 clearInterval(progressLoop);
 
@@ -467,10 +491,23 @@ function analyzeAudioTrack(_ref) {
     });
 }
 
-function saveDataToFile(analysis, sourcePath, gzip) {
+function saveDataToFile(_ref2) {
+    var analysis = _ref2.analysis;
+    var sourcePath = _ref2.sourcePath;
+    var _ref2$gzip = _ref2.gzip;
+    var gzip = _ref2$gzip === undefined ? false : _ref2$gzip;
+    var _ref2$progressBar = _ref2.progressBar;
+    var progressBar = _ref2$progressBar === undefined ? {
+        start: noop,
+        set: noop,
+        error: noop,
+        complete: noop
+    } : _ref2$progressBar;
 
     var folder = destPicker.paths[0];
     var dest = _path2['default'].resolve(folder, _path2['default'].basename(sourcePath)).replace(/\.[a-zA-Z]*$/i, ".afa");
+
+    progressBar.start();
 
     var file = new _afaFile2['default'](analysis);
 
@@ -484,12 +521,19 @@ function saveDataToFile(analysis, sourcePath, gzip) {
         }
 
         if (gzip === true) {
+            progressBar.set(33);
+
             dest += ".gz";
             file.toGzipped().then(function (gzipped) {
+                progressBar.set(66);
+                // TODO: update progress of save bar as file is written
                 _fs2['default'].writeFile(dest, gzipped, "utf8", function () {
+                    progressBar.set(100);
+                    progressBar.complete();
                     resolve();
                 });
             })['catch'](function (err) {
+                progressBar.error();
                 reject({
                     err: err,
                     msg: "Error while gzipping file",
@@ -498,7 +542,10 @@ function saveDataToFile(analysis, sourcePath, gzip) {
                 });
             });
         } else {
+            progressBar.set(50);
             _fs2['default'].writeFile(dest, gzipped, "utf8", function () {
+                progressBar.set(100);
+                progressBar.complete();
                 resolve();
             });
         }
@@ -507,3 +554,4 @@ function saveDataToFile(analysis, sourcePath, gzip) {
 
 // display files (automatically registers `filePath`'s and `entry`'s')
 /*"indeterminate"*/
+//# sourceMappingURL=main.js.map

@@ -127,7 +127,7 @@ util.withRefs = function withRefs($el) {
 
 util.tmp = {};
 
-util.tmp.path = "./tmp";
+util.tmp.path = _path2['default'].resolve(__dirname, "./tmp");
 
 util.tmp.createDir = function createDir() {
     if (!_fsExtra2['default'].existsSync(util.tmp.path)) {
@@ -235,3 +235,4 @@ util.analyzerOptions = {
 
 exports['default'] = util;
 module.exports = exports['default'];
+//# sourceMappingURL=util.js.map

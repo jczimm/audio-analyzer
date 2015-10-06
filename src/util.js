@@ -114,7 +114,7 @@ util.withRefs = function withRefs($el) {
 
 util.tmp = {};
 
-util.tmp.path = "./tmp";
+util.tmp.path = path.resolve(__dirname, "./tmp");
 
 util.tmp.createDir = function createDir() {
     if (!fs.existsSync(util.tmp.path)) {

@@ -92,3 +92,4 @@ var FileList = (function () {
 
 exports['default'] = FileList;
 module.exports = exports['default'];
+//# sourceMappingURL=fileList.js.map
