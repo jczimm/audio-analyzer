@@ -165,7 +165,8 @@ input#upload {
         position: fixed auto auto 1em 1em;
         padding: 0.5em;
         height: 1.4em;
-        background-color: $darker-grey-bg;
+        background-color: $darker-grey-bg; // FIXME
+        border: 2px solid black;
 
         > span {
             color: $grey-accent;
