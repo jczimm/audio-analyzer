@@ -1,3 +1,4 @@
+```
 Code Quality:
 
   ☐ use DocBlockr to generate simple documentation for [functions in] .js files
@@ -37,4 +38,4 @@ Development:
   vantage: interface in the cli
   node-inspector: debugger interface for node.js applications that uses the Blink Developer Tools 
   (see https://github.com/atom/electron/blob/master/docs/tutorial/debugging-main-process.md#use-node-inspector-for-debugging) 
-  
+```
