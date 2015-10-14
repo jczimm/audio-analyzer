@@ -20,6 +20,4 @@ npm install
 
 > TODO
 
-##### Note:
-
-Windows does not support packaging the app for OSX.
+**Note:** Windows does not support packaging the app for OSX as it involves symlinks, which Windows cannot create.
