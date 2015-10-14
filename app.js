@@ -71,7 +71,7 @@ app.on('ready', function() {
     if (process.env.NODE_ENV === "development") {
 
         // make window resizeable (for convenience's sake)
-        mainWindow.resizable = true;
+        mainWindow.setResizable(true);
         
         // initialize `mainWindow` with electron-connect (for live reload)
         liveReloadClient.create(mainWindow);
