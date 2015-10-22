@@ -23,12 +23,22 @@ const APP_JS = ['./app.js'];
 // live-reloading application for development
 var electron = require('electron-connect').server.create();
 
-gulp.task('dev', ['build', 'serve']); // serve after build is complete
+gulp.task('dev', ['build', '_serve']); // serve after build is complete
+
+// Declare `build` as a dependency (this task is only meant to be run after `build`)
+gulp.task('_serve', ['build'], function() {
+    gulp.start('serve');
+}); 
 
 gulp.task('serve', function() {
     // Start browser process
     electron.start();
 
+    // Watch files + rebuild upon changes
+    gulp.start('watch');
+});
+
+gulp.task('watch', function() {
     // Rebuild app.js and restart browser process when app.js is modified
     gulp.watch(APP_JS, ["build:app-js", "reload:browser"]);
 
@@ -36,12 +46,14 @@ gulp.task('serve', function() {
     gulp.watch(SRC_DIR + '**/*', ["build:client", "reload:renderer"]);
 });
 
-gulp.task('reload:browser', function() {
+// Declare `build:app-js` as a task dependency
+gulp.task('reload:browser', ['build:app-js'], function() {
     // Restart main process
     electron.restart();
 });
 
-gulp.task('reload:renderer', function() {
+// Declare `build:client` as a task dependency
+gulp.task('reload:renderer', ['build:client'], function() {
     // Reload renderer process
     electron.reload();
 });
