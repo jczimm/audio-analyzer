@@ -38,4 +38,8 @@ Development:
   vantage: interface in the cli
   node-inspector: debugger interface for node.js applications that uses the Blink Developer Tools 
   (see https://github.com/atom/electron/blob/master/docs/tutorial/debugging-main-process.md#use-node-inspector-for-debugging) 
+
+Distribution:
+  ☐ disable development shortcuts (e.g. CTRL+R, CTRL+SHIFT+I) in app in a non-development environment
+
 ```
