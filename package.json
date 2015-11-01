@@ -33,11 +33,8 @@
     "keywords": [
         "audio", "analyzer", "analyser", "frequency", "electron"
     ],
-    "contributors": [{
-        "name": "Jacob Zimmerman",
-        "email": "jczimm@jczimm.com",
-        "url": "http://jczimm.com/"
-    }],
+    "author": "Jacob Zimmerman <jczimm@jczimm.com> (http://jczimm.com)",
+    "contributors": [],
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/jczimm/audio-analyzer/issues"
