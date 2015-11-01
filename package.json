@@ -42,6 +42,10 @@
     "jquery": "^2.1.4",
     "web-audio-analyser": "^2.0.0"
   },
+  "optionalDependencies": {
+    "appdmg": "^0.3.2",
+    "rcedit": "^0.3.0"
+  },
   "devDependencies": {
     "babel-core": "^5.8.23",
     "electron-builder": "^2.0.0",
