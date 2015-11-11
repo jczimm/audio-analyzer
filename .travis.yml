@@ -1,0 +1,22 @@
+
+language: node_js
+node_js:
+    - "stable"
+
+    # versions not yet available (http://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Provided-Node.js-Versions)
+    # - "5.0"
+    # - "4.2"
+    - "4.1"
+    - "4.0"
+    - "0.12"
+    - "0.11"
+    - "0.10"
+    - "0.8"
+    - "0.6"
+
+before_script:
+    - npm install -g gulp
+script: 
+    - gulp lint
+    - npm run export:win
+    - npm run export:osx
