@@ -1,8 +1,6 @@
 
 language: node_js
 node_js:
-    - "stable"
-
     # versions not yet available (http://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Provided-Node.js-Versions)
     # - "5.0"
     # - "4.2"
