@@ -8,7 +8,7 @@ $grey-accent2: #aaa;
 $theme-color: rgb(63,81,181);
 $accent: rgb(255,110,64);
 
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic|Roboto+Mono);
 * {
     box-sizing: border-box;
 }
@@ -70,12 +70,32 @@ ul.mdl-menu.main > li {
     input#dest {
         display: none;
     }
+    #chooseDestButton {
+        > i.material-icons {
+            &.open { visibility: visible; }
+            &.filled { visibility: hidden; }
+        }
+    }
+    &.filled > #chooseDestButton > i.material-icons {
+        &.open { visibility: hidden; }
+        &.filled { visibility: visible; }
+    }
     #destLabel {
         position: absolute;
-        text-align: right;
-        width: 100%;
-        right: 0;
+        display: inline;
+        text-align: left;
+        padding-left: 0.5em;
         padding-right: 1em;
+        overflow: hidden;
+        /* max-width: calc(100% - 2em); */
+        /* clip-path: inset(0 2em 0 0); */
+
+        > span {
+            position: relative;
+            right: 0;
+            text-align: right;
+            font-family: "Roboto Mono", monospace;
+        }
     }
 }
 
@@ -164,6 +184,7 @@ input#upload {
         display: block;
         position: fixed auto auto 1em 1em;
         padding: 0.5em;
+        padding-bottom: 27px;
         height: 1.4em;
         background-color: $darker-grey-bg; // FIXME
         border: 2px solid black;
@@ -171,7 +192,7 @@ input#upload {
         > span {
             color: $grey-accent;
             font-size: 0.8em;
-            font-transform: uppercase;
+            text-transform: uppercase;
         }
 
         bottom: -100%;
