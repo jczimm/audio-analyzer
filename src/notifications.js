@@ -2,12 +2,14 @@
 
 require('./lib/snackbar/snackbar.min');
 
-
 var notifications = {};
 
-notifications.err = function(msg) {
-	$.snackbar({ style: "error", content: msg, timeout: 6000 });
+notifications.err = function err(msg) {
+	$.snackbar({
+		style: 'error',
+ 		content: msg,
+ 		timeout: 6000
+	});
 };
 
-
-module.exports = notifications;
+export default notifications;

@@ -1,3 +1,6 @@
+/* global sourcemaps, gutil, debug, rucksack, autoprefixer, sass, babel, jshint, changed, gulpif, exclude */
+console.log("Running " + __filename + "...");
+
 var gulp = require('gulp-param')(require('gulp'), process.argv),
     sourcemaps = require('gulp-sourcemaps'),
     gutil = require('gulp-util'),
@@ -26,19 +29,25 @@ var electron = require('electron-connect').server.create();
 gulp.task('dev', ['build', '_serve']); // serve after build is complete
 
 // Declare `build` as a dependency (this task is only meant to be run after `build`)
-gulp.task('_serve', ['build'], function() {
+gulp.task('_serve', ['build'], function () {
     gulp.start('serve');
-}); 
+});
 
-gulp.task('serve', function() {
+gulp.task('serve', function () {
     // Start browser process
-    electron.start();
+    electron.start(function () {
+        // when electron window closes, stop electron-connect
+        console.log(electron.electronProc);
+        electron.electronProc.on("window-all-closed", function () {
+            electron.stop();
+        });
+    });
 
     // Watch files + rebuild upon changes
     gulp.start('watch');
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     // Rebuild app.js and restart browser process when app.js is modified
     gulp.watch(APP_JS, ["build:app-js", "reload:browser"]);
 
@@ -47,13 +56,13 @@ gulp.task('watch', function() {
 });
 
 // Declare `build:app-js` as a task dependency
-gulp.task('reload:browser', ['build:app-js'], function() {
+gulp.task('reload:browser', ['build:app-js'], function () {
     // Restart main process
     electron.restart();
 });
 
 // Declare `build:client` as a task dependency
-gulp.task('reload:renderer', ['build:client'], function() {
+gulp.task('reload:renderer', ['build:client'], function () {
     // Reload renderer process
     electron.reload();
 });
@@ -68,7 +77,7 @@ const GLOBAL_EXCLUDE = ['!' + SRC_DIR + 'lib/*'];
 gulp.task('build', ['build:app-js', 'build:client']);
 gulp.task('build:client', ['build:html', 'build:js', 'build:css', 'copy-the-rest']);
 
-gulp.task('build:app-js', function(force) {
+gulp.task('build:app-js', function (force) {
     return gulp.src(APP_JS.concat(GLOBAL_EXCLUDE))
         .pipe(changed(DEST, util.changedOpts(force))) // only let "dirty" files through (files that have been modified since the last build)
         .pipe(debug()) // log all files that will be built
@@ -77,7 +86,7 @@ gulp.task('build:app-js', function(force) {
 });
 
 const HTML_SRC = [SRC_DIR + 'index.html'];
-gulp.task('build:html', function(force) {
+gulp.task('build:html', function (force) {
     return gulp.src(HTML_SRC.concat(GLOBAL_EXCLUDE))
         .pipe(changed(DEST, util.changedOpts(force))) // only let "dirty" files through
         .pipe(debug()) // log all files that will be built
@@ -86,7 +95,7 @@ gulp.task('build:html', function(force) {
 });
 
 const JS_SRC = [SRC_DIR + '**/*.js'];
-gulp.task('build:js', function(force) {
+gulp.task('build:js', function (force) {
     return gulp.src(JS_SRC.concat(GLOBAL_EXCLUDE))
         .pipe(changed(DEST, util.changedOpts(force))) // only let "dirty" files through
         .pipe(debug()) // log all files that will be built
@@ -100,15 +109,15 @@ gulp.task('build:js', function(force) {
 });
 
 const CSS_SRC = [SRC_DIR + '**/*.scss'];
-gulp.task('build:css', function(force) {
+gulp.task('build:css', function (force) {
     return gulp.src(CSS_SRC.concat(GLOBAL_EXCLUDE))
         .pipe(changed(DEST, util.changedOpts(force, '.css'))) // only let "dirty" files through
         .pipe(debug()) // log all files that will be built
         .pipe(sourcemaps.init()) // init sourcemaps
 
         .pipe(sass().on('error', sass.logError)) // translate the scss into css
-            .pipe(rucksack()) // process the css with rucksack (includes various CSS "superpowers")
-            .pipe(autoprefixer('last 20 versions')) // add vendor prefixes
+        .pipe(rucksack()) // process the css with rucksack (includes various CSS "superpowers")
+        .pipe(autoprefixer('last 20 versions')) // add vendor prefixes
 
         .pipe(sourcemaps.write('.')) // write all the source maps
 
@@ -117,7 +126,7 @@ gulp.task('build:css', function(force) {
 
 // invert SRC paths that have already been built so that this task only copies everything else
 const MISC_SRC = util.uniq([].concat.apply([], [HTML_SRC, JS_SRC, CSS_SRC].map(util.invertGulpSrcPath))).concat([SRC_DIR + '**/*']);
-gulp.task('copy-the-rest', function(force) {
+gulp.task('copy-the-rest', function (force) {
     return gulp.src(MISC_SRC)
         .pipe(changed(DEST, util.changedOpts(force))) // only let "dirty" files through
         .pipe(debug()) // log all files that will be built
@@ -129,7 +138,7 @@ gulp.task('copy-the-rest', function(force) {
 
 gulp.task('lint', ['lint:js']);
 
-gulp.task('lint:js', function() {
+gulp.task('lint:js', function () {
     return gulp.src(JS_SRC.concat(GLOBAL_EXCLUDE))
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'));

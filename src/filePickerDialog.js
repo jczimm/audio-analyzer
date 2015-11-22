@@ -7,15 +7,15 @@ const dialog = remote.require('dialog');
 const browserWindow = remote.getCurrentWindow();
 
 class FilePickerDialog {
-	constructor() {
+	constructor () {
 		this.paths = [];
 	}
 
-	pick() {
+	pick () {
 		this.paths = dialog.showOpenDialog(browserWindow, {
-            title: "Select Destination for Analysis Files",
-            properties: ["openDirectory"]
-        }) || [];
+			title: 'Select Destination for Analysis Files',
+			properties: ['openDirectory']
+		}) || [];
 		return this.paths;
 	}
 }
