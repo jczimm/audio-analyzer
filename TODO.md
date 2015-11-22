@@ -13,7 +13,9 @@ Code Quality:
       - loadLibraries.js
       - notifications.js
 
-  ☐ clean up style.scss (make it more readable - organize)
+  ☐ apply rscss style guide to html and scss files (see http://rscss.io)
+    ☐ edit index.html
+    ☐ reorganize + re-style styles in style.scss into components/*.scss (one file for each 'component'; see rscss spec)
 
 
 UI:
@@ -25,6 +27,7 @@ UI:
      ☐ FIXME: show a progress bar when saving an .afa file (replace .analysis-progress with an accent-color bar)
 
     General: 
+     ☐ Implement electron-drag for title bar (replacing -webkit-app-region) (https://github.com/kapetan/electron-drag)
      ☐ display "drop more tracks here" banner at bottom of .interface:not(.blank):not(.working)
      ☐ format Analysis Files Destination label
 
