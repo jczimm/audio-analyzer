@@ -117,12 +117,14 @@ var handleProcessButtonClick = function handleProcessButtonClick() {
                 // to this function after that track has completed
                 nextFile = util.sliceObj(files, numProcessed, numProcessed + 1);
         
-                if (nextFile !== {}) {
+                if (!$.isEmptyObject(nextFile)) {
                     processFiles(nextFile, { beforeEachTrack, onOneTrackCompleted });
                 } else {
                     $('#stop-button').hide();
+                    $('#process-button').show();
                 }
             };
+            
             processFiles(firstFiles, { beforeEachTrack, onOneTrackCompleted });
         }
     })
@@ -198,18 +200,24 @@ $('#stop-button').click(() => {
 
     // remove all progress bars
     var files = fileList.files,
-        $entry;
-
+        $entry, $checkbox;
+        
+    // for each file,
     for (let tmpFilePath in files) {
+        // for its corresponding entry element,
         $entry = files[tmpFilePath].entry;
+        
+        // remove the progress bar
         $entry.find('.mdl-progress').remove();
+        
+        // re-enable the checkbox
+        $checkbox = $entry.find('> td.label > .mdl-checkbox input[type=checkbox]').prop('disabled', false).parent().get(0);
+        if ($checkbox) $checkbox.MaterialCheckbox.checkDisabled();
     }
 
     // show #process-button again
     $("#process-button").show();
     $('#stop-button').hide();
-    
-    // TODO: re-enable every entry's checkbox
 });
 
 //
@@ -271,8 +279,12 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
 
         var $entry = file.entry;
 
-        // skip over unchecked tracks
-        if (!$entry.hasClass('is-selected')) continue;
+        // skip over unselected tracks and completed tracks
+        if (!$entry.hasClass('is-selected') || $entry.hasClass('is-completed')) {
+            beforeEachTrack();
+            onOneTrackCompleted();
+            continue;
+        }
 
         var progressBar = loadingStates.createProgressBar( /*"indeterminate"*/ ),
             $progressBar = $(progressBar.element_);
@@ -331,8 +343,10 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
 
                     // replace checkbox with a "done" icon (check mark)
                     var $icon = $('<i/>').addClass('icon material-icons').text('done');
-                    this.$entry.find('> td.label > .mdl-checkbox').remove()
-                        .parent().append($icon);
+                    this.$entry.find('> td.label > .mdl-checkbox').remove(); // remove checkbox
+                    this.$entry.find('> td.label').append($icon); // add icon
+                    
+                    this.$entry.addClass('is-completed'); // mark entry as a completed track
 
                     this.$progressBar.removeClass('current');
                     this.onOneTrackCompleted();
