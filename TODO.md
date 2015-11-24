@@ -31,6 +31,7 @@ UI:
 
     General: 
      ☐ Implement electron-drag for title bar (replacing -webkit-app-region) (https://github.com/kapetan/electron-drag)
+     ☐ Display a loading icon when files are being prepared to be displayed in the list (make the state in loadingStates.js)
      ✔ display "drop more tracks here" banner at bottom of .interface:not(.blank):not(.working) @done (15-11-21 23:29)
      ✔ format Analysis Files Destination label @done (15-11-21 23:29)
 
