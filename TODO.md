@@ -9,7 +9,7 @@ Code Quality:
 
   Refactoring:
     ✔ standardize options-object paradigm across all functions @done (15-11-23 19:01)
-      ✔ main.js @done (15-11-22 00:24)
+      ✔ main.js @done (15-11-23 19:01)
       ✔ util.js @done (15-11-23 16:43)
       ✔ fileList.js @done (15-11-22 00:20)
       ✔ loadingStates.js @done (15-11-23 19:00)
