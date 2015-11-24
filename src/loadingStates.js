@@ -3,8 +3,9 @@
 
 const loadingStates = {};
 
-loadingStates.createProgressBar = (progressClass) => {
-	var $progressBar = $('<div/>').addClass('mdl-progress mdl-js-progress').addClass(progressClass ? `mdl-progress__${progressClass}` : '');
+loadingStates.createProgressBar = function createProgressBar({ class: progressClass="" }) {
+	var $progressBar = $('<div/>').addClass('mdl-progress mdl-js-progress');
+	if (progressClass) $progressBar.addClass(`mdl-progress__${progressClass}`);
 
 	var progressBar = new MaterialProgress($progressBar.get(0));
 

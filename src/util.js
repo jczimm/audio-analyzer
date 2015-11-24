@@ -9,12 +9,12 @@ import notifications from './notifications';
 
 var util = {};
 
-util.normalize = function normalize(arr, factor) {
+util.normalize = function normalize(arr, factor = 100) {
 	var min = Math.min.apply(Math, arr),
-	max = Math.max.apply(Math, arr);
+		max = Math.max.apply(Math, arr);
 
 	return [].slice.call(arr).map(function (val) {
-		return (val - min) / (max - min) * (factor || 100);
+		return (val - min) / (max - min) * factor;
 	});
 };
 
@@ -23,7 +23,7 @@ util.copyFile = function copyFile(sourcePath, destDir) {
 		var destPath = path.resolve(destDir, path.basename(sourcePath));
 
 		var readStream = fs.createReadStream(sourcePath),
-		writeStream = fs.createWriteStream(destPath);
+			writeStream = fs.createWriteStream(destPath);
 
 		writeStream.on('finish', function () {
 			resolve(path.relative(__dirname, destPath));
@@ -62,7 +62,7 @@ util.sliceObj = function sliceObj(obj, start, end) {
 
 	for (var k in obj) {
 		if (i >= start && i < end)
-		sliced[k] = obj[k];
+			sliced[k] = obj[k];
 
 		i++;
 	}
@@ -153,14 +153,14 @@ util.getLengthOfAudioFile = function getLengthOfAudioFile(path) {
 };
 
 util.convertSecondsToHHMMSS = function convertSecondsToHHMMSS(seconds) {
-	var date = new Date(1970,0,1);
+	var date = new Date(1970, 0, 1);
 	date.setSeconds(seconds);
 	return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, '$1');
 };
 
 util.handleAudioLoadError = function handleAudioLoadError(e, reject) {
 	var err = e.currentTarget.error,
-	errMsg;
+		errMsg;
 
 	switch (err.code) {
 		case err.MEDIA_ERR_ABORTED:
@@ -204,7 +204,7 @@ util.handleError = function handleError(err) {
 	//      notify: false
 	// }
 
-	console.error((`ERR @ ${err.loc}` + (typeof err.args === 'object' ? `(${err.args.join(', ')})` : '') + ':'), err.err);
+	console.error((`ERR @ ${err.loc}` + (typeof err.args === 'object' ? `(${err.args.join(', ') })` : '') + ':'), err.err);
 
 	if (err.notify === true) {
 		notifications.err(err.msg);

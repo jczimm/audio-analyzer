@@ -23,7 +23,7 @@ var trackListTable = new MaterialDataTable($trackList.get(0));
 
 import FileList from './fileList';
 
-const fileList = new FileList(trackListTable);
+const fileList = new FileList({ trackListTable });
 
 import FilePickerDialog from './filePickerDialog';
 
@@ -78,32 +78,22 @@ function handleFileInputChange() {
 
 const maxConcurrentCtxs = 1;
 
-function handleProcessButtonClick() {
-    var process = function process(files) {
-        // process the first batch of files
+var handleProcessButtonClick = function handleProcessButtonClick() {
 
-        var numProcessed = 0,
-            firstFiles = util.sliceObj(files, 0, maxConcurrentCtxs),
-            nextFile;
+    if (!destPicker.paths[0]) {
+        var path = promptDestPicker();
 
-        var beforeEachTrack = function beforeEachTrack() {
-            numProcessed++;
-        };
-
-        processFiles(firstFiles, beforeEachTrack, function oneTrackCompleted() {
-            // for every track completed, process the next one on the queue and have `processFiles` call back
-            // to this function after that track has completed
-            nextFile = util.sliceObj(files, numProcessed, numProcessed + 1);
-
-            if (nextFile !== {}) {
-                processFiles(nextFile, beforeEachTrack, oneTrackCompleted);
-            } else {
-                $('#stop-button').hide();
-            }
-        });
-    };
-
-    var start = function start() {
+        if (path !== undefined && path.length > 0) {
+            this.start(fileList.files);
+        } else {
+            notifications.err('Error: No destination directory was provided. [Try Again]'); // TODO: make [Try Again] a text button (material toast "action")
+        }
+    } else {
+        this.start(fileList.files);
+    }
+    
+}.bind({
+    start: (function start(files) {
         working = true;
         $interface.addClass('working');
 
@@ -111,19 +101,32 @@ function handleProcessButtonClick() {
         $('#process-button').hide();
         $('#stop-button').show();
 
-        process(fileList.files);
-    };
-
-    if (!destPicker.paths[0]) {
-        var path = promptDestPicker();
-
-        if (path !== undefined && path.length > 0) {
-            start();
-        } else notifications.err('Error: No destination directory was provided. [Try Again]');
-    } else {
-        start();
-    }
-}
+        this.process(files);
+    }).bind({
+        process(files) {
+            // process the first batch of files
+        
+            var numProcessed = 0,
+                firstFiles = util.sliceObj(files, 0, maxConcurrentCtxs),
+                nextFile;
+        
+            var beforeEachTrack = () => { numProcessed++; };
+            
+            var onOneTrackCompleted = function onOneTrackCompleted() {
+                // for every track completed, process the next one on the queue and have `processFiles` call back
+                // to this function after that track has completed
+                nextFile = util.sliceObj(files, numProcessed, numProcessed + 1);
+        
+                if (nextFile !== {}) {
+                    processFiles(nextFile, { beforeEachTrack, onOneTrackCompleted });
+                } else {
+                    $('#stop-button').hide();
+                }
+            };
+            processFiles(firstFiles, { beforeEachTrack, onOneTrackCompleted });
+        }
+    })
+});
 
 var $pointsPerSecond = $('input[type=range]#pointsPerSecond'),
     $pointsPerSecondCounter = $('span#pointsPerSecondCounter > span.inner');
@@ -144,11 +147,9 @@ function handlePointsPerSecondRangeChange(e) {
 
 handlePointsPerSecondRangeChange.apply($pointsPerSecond);
 
-var destLabelHover = function() {
+var destLabelHover = function destLabelHover() {
     var textWidth = $innerDestLabel.width(),
         labelWidth = $destLabel.parent().width() - 32; // width of li minus 2em on left (where button is)
-
-    console.log(textWidth, labelWidth);
 
     if (textWidth - labelWidth > 0) {
         var rightPos = textWidth - labelWidth,
@@ -180,7 +181,6 @@ function promptDestPicker() {
         $destLabel.parent().addClass('filled');
         $('#chooseDestButton').removeClass('mdl-button--raised');
 
-        console.log(destLabelHover());
         $destLabel.off('mouseenter mouseleave').hover.apply($destLabel, destLabelHover());
     }
 
@@ -205,22 +205,25 @@ $('#stop-button').click(() => {
         $entry.find('.mdl-progress').remove();
     }
 
-    // // show #process-button again
-    // $("#process-button").show();
+    // show #process-button again
+    $("#process-button").show();
     $('#stop-button').hide();
+    
+    // TODO: re-enable every entry's checkbox
 });
 
 //
 
-var invalidFileFormatMsg = 'Invalid file format (currently, only .wav and .mp3 files are supported)';
+var invalidFileFormatMsg = (fileName) => `${fileName}: Invalid file format (currently, only .wav and .mp3 files are supported)`;
 
 function handleFiles(files) {
     var filePaths = [];
 
     [].slice.call(files).forEach((file) => {
-        if (!/\.(?:wav|mp3)$/i.test(path.basename(file.name))) {
-            console.error('ERR: ' + invalidFileFormatMsg);
-            notifications.err(invalidFileFormatMsg);
+        let fileName = file.name;
+        if (!/\.(?:wav|mp3)$/i.test(path.basename(fileName))) {
+            console.error('ERR: ' + invalidFileFormatMsg(fileName));
+            notifications.err(invalidFileFormatMsg(fileName));
         } else {
             filePaths.push(file.path);
         }
@@ -245,7 +248,6 @@ function handleFiles(files) {
 
 async function prepareFiles(filePaths) {
     try {
-        /// ES-IGNORE
         let tmpFilePaths = await util.tmp.copyFilesToTmp(filePaths);
 
         // display files (automatically registers `filePath`'s and `entry`'s')
@@ -256,7 +258,7 @@ async function prepareFiles(filePaths) {
     }
 }
 
-function processFiles(files, beforeEachTrack, oneTrackCompleted) {
+function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
     // set configuration variables to the values of the options' corresponding inputs in the interface
     var gzip = $('input#gzip').is(':checked'),
         pointsPerSecond = parseInt($pointsPerSecond.val());
@@ -333,7 +335,7 @@ function processFiles(files, beforeEachTrack, oneTrackCompleted) {
                         .parent().append($icon);
 
                     this.$progressBar.removeClass('current');
-                    this.oneTrackCompleted();
+                    this.onOneTrackCompleted();
                 }
             }
 
@@ -357,22 +359,20 @@ function processFiles(files, beforeEachTrack, oneTrackCompleted) {
                 progressBar,
                 $progressBar,
                 $entry,
-                oneTrackCompleted
+                onOneTrackCompleted
             });
         }
 
         // numProcessed++ so that when any track completes, the next available analysis will not process this one
         beforeEachTrack();
 
-        analyzeAudioTrack({
-                filePath: tmpFilePath,
+        analyzeAudioTrack(tmpFilePath, {
                 pointsPerSecond,
                 trackLength,
                 progressBar: analysisOpts
             })
             .then((results) => {
-                saveDataToFile({
-                        analysis: results.analysis,
+                saveDataToFile(results.analysis, {
                         sourcePath: results.sourcePath,
                         gzip,
                         progressBar: saveOpts
@@ -391,8 +391,7 @@ function processFiles(files, beforeEachTrack, oneTrackCompleted) {
     }
 }
 
-function analyzeAudioTrack({
-    filePath,
+function analyzeAudioTrack(filePath, {
     pointsPerSecond=1000,
     trackLength,
     progressBar = {
@@ -495,8 +494,7 @@ function analyzeAudioTrack({
     });
 }
 
-function saveDataToFile({
-    analysis,
+function saveDataToFile(analysis, {
     sourcePath,
     gzip = false,
     progressBar = {
