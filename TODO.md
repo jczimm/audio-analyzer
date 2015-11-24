@@ -45,4 +45,13 @@ Development:
 Distribution:
   ☐ disable development shortcuts (e.g. CTRL+R, CTRL+SHIFT+I) in app in a non-development environment
 
+
+Before Open-Sourcing:
+  ☐ provide a release to the repo (an installer + the packaged application (the folder with the .exe, .dll's, folders etc.))
+  ☐ add a decent CONTRIBUTING.md (link from README.md)
+  ☐ create a demo gif to demo the UI and usage process (what the user does) (embed in README.md)
+
+After Open-Sourcing:
+  ☐ configure/start travis automated builds (testing), already have .travis.yml
+
 ```
