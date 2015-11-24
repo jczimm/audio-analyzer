@@ -55,14 +55,15 @@
     "rcedit": "^0.3.0"
   },
   "devDependencies": {
-    "babel-core": "^5.8.23",
+    "babel-core": "^6.2.1",
+    "babel-preset-es2015": "^6.1.18",
     "electron-builder": "^2.0.0",
     "electron-connect": "^0.3.2",
     "electron-packager": "^5.1.0",
     "electron-prebuilt": "^0.33.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.0.1",
-    "gulp-babel": "^5.2.1",
+    "gulp-babel": "^6.1.0",
     "gulp-changed": "^1.3.0",
     "gulp-debug": "^2.1.2",
     "gulp-if": "^1.2.5",

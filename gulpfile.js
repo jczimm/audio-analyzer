@@ -101,7 +101,9 @@ gulp.task('build:js', function (force) {
         .pipe(debug()) // log all files that will be built
         .pipe(sourcemaps.init()) // init sourcemaps
 
-        .pipe(babel().on('error', util.logErrorWithoutColorCodes)) // transpile ES6 to ES5
+        .pipe(babel({
+            presets: ['es2015']
+        }).on('error', util.logErrorWithoutColorCodes)) // transpile ES6 to ES5
 
         .pipe(sourcemaps.write('.')) // write all the source maps
 
