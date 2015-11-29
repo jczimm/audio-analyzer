@@ -74,7 +74,7 @@ electron app
 gulp build
 ```
 
-> Transpiles ES6 javascript, compile scss, and copy the rest from `src/` -- and `app.js` -- to `app/`
+> Transpiles ES6 javascript, compiles scss, and copies the rest from `src/` -- and `app.js` -- into `app/`
 
 ### Packaging the Application 
 
@@ -89,13 +89,13 @@ npm run build:win
 npm run build:osx
 ```
 
-> Generates folder(s) with a rebranded electron executable in a context to launch the application (outputs to dist/)
+> Generates folder(s) with a rebranded electron executable in a context to launch the application (outputs into dist/)
 
 
 `build`, `build:win`, and `build:osx` build everything in src/, so if you want to build only the files that have been modified since the last build, add `:update` to the script name (i.e. `npm run build:update`, `npm run build:win:update`, or `npm run build:osx:update`)
 
 
-**Note:** Windows does not support packaging the app for OSX as it involves symlinks, which Windows cannot create.
+[//]: # (**Note:** Windows does not support packaging the app for OSX as it involves symlinks, which Windows cannot create.)
 
 
 ### Generating Installers
