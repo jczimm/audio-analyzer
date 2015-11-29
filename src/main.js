@@ -91,7 +91,7 @@ var handleProcessButtonClick = function handleProcessButtonClick() {
     } else {
         this.start(fileList.files);
     }
-    
+
 }.bind({
     start: (function start(files) {
         working = true;
@@ -109,14 +109,14 @@ var handleProcessButtonClick = function handleProcessButtonClick() {
             var numProcessed = 0,
                 firstFiles = util.sliceObj(files, 0, maxConcurrentCtxs),
                 nextFile;
-        
+
             var beforeEachTrack = () => { numProcessed++; };
-            
+
             var onOneTrackCompleted = function onOneTrackCompleted() {
                 // for every track completed, process the next one on the queue and have `processFiles` call back
                 // to this function after that track has completed
                 nextFile = util.sliceObj(files, numProcessed, numProcessed + 1);
-        
+
                 if (!$.isEmptyObject(nextFile)) {
                     processFiles(nextFile, { beforeEachTrack, onOneTrackCompleted });
                 } else {
@@ -124,7 +124,7 @@ var handleProcessButtonClick = function handleProcessButtonClick() {
                     $('#process-button').show();
                 }
             };
-            
+
             processFiles(firstFiles, { beforeEachTrack, onOneTrackCompleted });
         }
     })
@@ -161,7 +161,7 @@ var destLabelHover = function destLabelHover() {
             function mouseIn() {
                 $innerDestLabel.animate({
                     right: `${rightPos}px`
-                }, time, 'linear', function() {
+                }, time, 'linear', function () {
                     $(this).stop();
                 });
             },
@@ -247,7 +247,7 @@ function handleFiles(files) {
                 $('#interface, div#upload-button, #interface #blank-state-text').off('click');
             })
             
-            // errors are already handled in try..catch
+        // errors are already handled in try..catch
             .catch((err) => {
                 // console.log(err);
             });
@@ -286,7 +286,7 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
             continue;
         }
 
-        var progressBar = loadingStates.createProgressBar( /*"indeterminate"*/ ),
+        var progressBar = loadingStates.createProgressBar( /*"indeterminate"*/),
             $progressBar = $(progressBar.element_);
 
         $entry.append($progressBar);
@@ -381,16 +381,16 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
         beforeEachTrack();
 
         analyzeAudioTrack(tmpFilePath, {
-                pointsPerSecond,
-                trackLength,
-                progressBar: analysisOpts
-            })
+            pointsPerSecond,
+            trackLength,
+            progressBar: analysisOpts
+        })
             .then((results) => {
                 saveDataToFile(results.analysis, {
-                        sourcePath: results.sourcePath,
-                        gzip,
-                        progressBar: saveOpts
-                    })
+                    sourcePath: results.sourcePath,
+                    gzip,
+                    progressBar: saveOpts
+                })
                     .then(() => {
                         console.log('successfully saved .afa file for %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(tmpFilePath));
                     }).catch((err) => {
@@ -406,13 +406,13 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
 }
 
 function analyzeAudioTrack(filePath, {
-    pointsPerSecond=1000,
+    pointsPerSecond = 1000,
     trackLength,
     progressBar = {
-        start() {},
-        set(progress) {},
-        error() {},
-        complete() {}
+        start() { },
+        set(progress) { },
+        error() { },
+        complete() { }
     }
 }) {
     return new Promise((resolve, reject) => {
@@ -482,32 +482,39 @@ function analyzeAudioTrack(filePath, {
         var progress = 0,
             first = false;
         audio.addEventListener('canplaythrough', (e) => {
-            if (!first) {
+            if (!first) { // handling mysterious duplicate `audio`s being created for a single source
                 first = true;
 
-                // remove indeterminate status from progress bar
+                // remove an indeterminate status from progress bar
                 progressBar.start();
 
                 // analyze the audio
                 console.log('analyzing %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(filePath));
                 analysisLoop = setInterval(() => {
-                    // TODO: make normalization optional, make the default regulator a "non- compressor"
-                    // !!! analyzer.frequencies seems to produce only [0..]: FIXME
-                    frequencies = util.normalize(analyzer.frequencies(), 100);
+                    
+                                    // !!! analyzer.frequencies seems to produce only [0..]: FIXME
+                    frequencies = util.normalize(analyzer.frequencies(), {
+                        from: 0,
+                        to: 100,
+                        alreadyNormalized: { // just scale the values; `getByteFrequencyData` outputs a normalized array from 0 - 255
+                            from: 0,
+                            to: 255
+                        }
+                    });
                     afaData.push(frequencies);
 
                     progress = (audio.currentTime += speed) / trackLength;
                 }, 1);
                 window.loops.push(analysisLoop);
 
-                // update progress bar in a separate detached loop (async)
+                // update progress bar in a separate detached loop (async with `analysisLoop`)
                 progressLoop = setInterval(() => {
                     // update progress bar
                     progressBar.set(progress);
                 }, 50);
                 window.loops.push(progressLoop);
             }
-        });
+        }, false);
     });
 }
 
@@ -515,10 +522,10 @@ function saveDataToFile(analysis, {
     sourcePath,
     gzip = false,
     progressBar = {
-        start() {},
-        set(progress) {},
-        error() {},
-        complete() {}
+        start() { },
+        set(progress) { },
+        error() { },
+        complete() { }
     }
 }) {
     var folder = destPicker.paths[0];

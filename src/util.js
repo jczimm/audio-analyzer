@@ -9,14 +9,33 @@ import notifications from './notifications';
 
 var util = {};
 
-util.normalize = function normalize(arr, factor = 100) {
-	var min = Math.min.apply(Math, arr),
-		max = Math.max.apply(Math, arr);
-
-	// replace each value with:
-	// 	the proportion of its dist to the lowest value out of the range between the lowest and the highest, * target range
-	//	e.g. [0,1,2] => [0,50,100]
-	return arr.map(val => ((val - min) / (max - min) * factor) || 0); // if max - min === 0, will yield NaN -> 0
+util.normalize = function normalize(arr, {
+	from = 0,
+	to = 100,
+	alreadyNormalized
+} = {}) { // alreadyNormalized?: { from, to }
+	var targetRange = to - from;
+	
+	if (typeof alreadyNormalized !== "object") {
+		let min = Math.min.apply(Math, arr),
+			max = Math.max.apply(Math, arr),
+			range = max - min,
+			rangeChange = targetRange / range;
+			
+		if (targetRange < 0) {
+			throw new Error('`to` must be greater than `from` in option passed to util.normalize');
+		}
+	
+		// replace each value with:
+		// 	the proportion of its dist to the lowest value out of the range between the lowest and the highest, * target range
+		//	( (val - min) / (max - min) * targetRange )
+		//	e.g. [0,1,2] => [0,50,100]
+		return arr.map(val => (((val - min) * rangeChange) || 0) + from); // if max - min === 0, will yield NaN -> 0
+	} else {
+		let range = alreadyNormalized.to - alreadyNormalized.from,
+			rangeChange = targetRange / range;
+		return arr.map(val => (((val - alreadyNormalized.from) * rangeChange) || 0) + from);
+	}
 };
 
 util.copyFile = function copyFile(sourcePath, destDir) {
