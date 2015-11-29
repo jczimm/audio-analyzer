@@ -13,13 +13,14 @@ util.normalize = function normalize(arr, factor = 100) {
 	var min = Math.min.apply(Math, arr),
 		max = Math.max.apply(Math, arr);
 
-	return [].slice.call(arr).map(function (val) {
-		return (val - min) / (max - min) * factor;
-	});
+	// replace each value with:
+	// 	the proportion of its dist to the lowest value out of the range between the lowest and the highest, * target range
+	//	e.g. [0,1,2] => [0,50,100]
+	return arr.map(val => ((val - min) / (max - min) * factor) || 0); // if max - min === 0, will yield NaN -> 0
 };
 
 util.copyFile = function copyFile(sourcePath, destDir) {
-	return new Promise(function (resolve, reject) {
+	return new Promise((resolve, reject) => {
 		var destPath = path.resolve(destDir, path.basename(sourcePath));
 
 		var readStream = fs.createReadStream(sourcePath),
@@ -42,7 +43,7 @@ util.copyFile = function copyFile(sourcePath, destDir) {
 	});
 };
 
-// util.cloneFunc = function(func) {
+// util.cloneFunc = function cloneFunc(func) {
 //     var temp = function temporary() { return func.apply(this, arguments); };
 //     for(var key in func) {
 //         if (func.hasOwnProperty(key)) {
@@ -70,7 +71,7 @@ util.sliceObj = function sliceObj(obj, start, end) {
 	return sliced;
 };
 
-// util.construct = function(f, args) {
+// util.construct = function construct(f, args) {
 //     var className = f.constructor.toString().match(/^function (.+)\(\)/)[1];
 
 //     var namedFunc = util.namedFunction(className, ["f", "args"], "f.apply(this, args);", {f: f, args: args});
@@ -78,7 +79,7 @@ util.sliceObj = function sliceObj(obj, start, end) {
 //     return new namedFunc(f, args);
 // };
 
-// util.namedFunction = function(name, args, body, scope, values) {
+// util.namedFunction = function namedFunction(name, args, body, scope, values) {
 //     if (typeof args == "string")
 //         values = scope, scope = body, body = args, args = [];
 //     if (!Array.isArray(scope) || !Array.isArray(values)) {
@@ -136,7 +137,7 @@ util.tmp.cleanUp = function cleanUp() {
 // AUDIO UTILIES
 
 util.getLengthOfAudioFile = function getLengthOfAudioFile(path) {
-	return new Promise(function (resolve, reject) {
+	return new Promise((resolve, reject) => {
 		var audio = new Audio();
 		audio.src = path;
 
@@ -215,7 +216,7 @@ util.handleError = function handleError(err) {
 
 util.analyzerOptions = {
 	stereo: false,
-	audible: false
+	audible: true
 };
 
 export default util;
