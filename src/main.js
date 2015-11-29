@@ -421,6 +421,7 @@ function analyzeAudioTrack(filePath, {
         // configure `audio`
         audio.autoplay = false;
         audio.preload = 'auto';
+        audio.crossOrigin = 'anonymous';
         audio.src = filePath;
 
         var analyzer = audioAnalyzer(audio, util.analyzerOptions);
@@ -490,7 +491,9 @@ function analyzeAudioTrack(filePath, {
                 // analyze the audio
                 console.log('analyzing %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(filePath));
                 analysisLoop = setInterval(() => {
-                    frequencies = new Uint8Array(util.normalize(analyzer.frequencies(), 0, 100));
+                    // TODO: make normalization optional, make the default regulator a "non- compressor"
+                    // !!! analyzer.frequencies seems to produce only [0..]: FIXME
+                    frequencies = util.normalize(analyzer.frequencies(), 100);
                     afaData.push(frequencies);
 
                     progress = (audio.currentTime += speed) / trackLength;
