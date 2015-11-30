@@ -134,8 +134,14 @@ var handleProcessButtonClick = function handleProcessButtonClick() {
                     processFiles(nextFile, { beforeEachTrack, onOneTrackDone });
                 } else {
                     // if there is no next track in the list, consider the process finished
-                    actionButton.updateForState('finished');
                     working = false;
+                    $interface.removeClass('working');
+                    
+                    // if all files are completed, (see ActionButton.js)
+                    if (!actionButton.updateForState('finished')) {
+                        // then we're done (hide the processButton)
+                        $interface.addClass('done');
+                    }
                 }
             };
 
@@ -208,11 +214,15 @@ $pointsPerSecond.on('change input', handlePointsPerSecondRangeChange.bind($point
 $('#process-button').click(handleProcessButtonClick);
 
 window.loops = [];
+var stopping = false;
 $('#stop-button').click(() => {
     // clear all loops
+    stopping = true;
     window.loops.forEach(clearInterval);
 
-    // remove all progress bars
+
+    // remove all progress bars:
+    
     var files = fileList.files,
         $entry, $checkbox;
         
@@ -229,8 +239,15 @@ $('#stop-button').click(() => {
         if ($checkbox) $checkbox.MaterialCheckbox.checkDisabled();
     }
 
-    // show #process-button again
-    actionButton.updateForState('finished');
+    // if there is no next track in the list, consider the process finished
+    working = false;
+    $interface.removeClass('working');
+    
+    // if all files are completed, (see ActionButton.js)
+    if (!actionButton.updateForState('finished')) {
+        // then we're done (hide the processButton)
+        $interface.addClass('done');
+    }
 });
 
 //
@@ -255,8 +272,11 @@ function handleFiles(files) {
     if (filePaths[0]) {
         prepareFiles(filePaths)
             .then(() => {
-                // update interface
-                $interface.removeClass('blank');
+                // update interface:
+                
+                // remove 'blank' class and 'done' class (only one will be there), animating in the '#process-button' FAB
+                $interface.removeClass('blank').removeClass('done');
+                // and unbind blank state click handlers (i.e. unbind from clicking $fileInput)
                 $('#interface, div#upload-button, #interface #blank-state-text').off('click');
             })
             
@@ -272,7 +292,7 @@ async function prepareFiles(filePaths) {
         let tmpFilePaths = await util.tmp.copyFilesToTmp(filePaths);
 
         // display files (automatically registers `filePath`'s and `entry`'s')
-        await * tmpFilePaths.map(fileList.displayFile.bind(fileList));
+        await * tmpFilePaths.map(::fileList.displayFile);
         return;
     } catch (err) {
         util.handleError(err);
@@ -436,6 +456,8 @@ function analyzeAudioTrack(filePath, {
         audio.preload = 'auto';
         audio.crossOrigin = 'anonymous';
         audio.volume = 1;
+        audio.playbackRate = 0;
+        
         audio.src = filePath;
 
         var analyzer = audioAnalyzer(audio, util.analyzerOptions);
@@ -519,6 +541,7 @@ function analyzeAudioTrack(filePath, {
                 audio.play();
                 
                 analysisLoop = setInterval(() => {
+                    if (stopping) return;
                     
                     // !!! analyzer.frequencies seems to produce only [0..]: FIXME
                     frequencies = util.normalize(analyzer.frequencies(), {
@@ -537,6 +560,8 @@ function analyzeAudioTrack(filePath, {
 
                 // update progress bar in a separate detached loop (async with `analysisLoop`)
                 progressLoop = setInterval(() => {
+                    if (stopping) return;
+                    
                     // update progress bar
                     progressBar.set(progress);
                 }, 50);
