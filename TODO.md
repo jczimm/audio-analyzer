@@ -4,6 +4,8 @@ Core:
 
   ☐ write .afa files with write-streams (don't cache the great amount of analysis data in memory before writing the files statically!)
     ☐ for gzipping, after an .afa file is written, statically [read,] compress, replace it with an .afa.gz file
+
+  ☐ implement stereo audio analysis, "stereo mode" enabled by default (look at web-audio-analyser docs/readme for impl. through it)
   
 Code Quality:
 
