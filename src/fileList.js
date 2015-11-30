@@ -17,7 +17,8 @@ class FileList {
     addFile (filePath, { $entry, trackLength }) {
 		this.files[filePath] = {
 			entry: $entry,
-			trackLength
+			trackLength,
+			completed: false
 		};
     }
 
