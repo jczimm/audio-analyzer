@@ -1,5 +1,7 @@
 ```
 Core:
+  ☐ fix audio analysis loop! @important
+
   ☐ write .afa files with write-streams (don't cache the great amount of analysis data in memory before writing the files statically!)
     ☐ for gzipping, after an .afa file is written, statically [read,] compress, replace it with an .afa.gz file
   
@@ -15,10 +17,15 @@ Code Quality:
       ✔ loadingStates.js @done (15-11-23 19:00)
       ✔ notifications.js @done (15-11-23 19:01)
 
-  ☐ apply rscss style guide to html and scss files (see http://rscss.io)
-    - edit index.html
-    - reorganize + re-style styles in style.scss into components/*.scss (one file for each 'component'; see rscss spec)
+    ☐ modularize functions in main.js (split main.js into multiple files; group functions by intuitive domain/purpose, create classes where intuitive)
+    ☐ organize globals (maybe use a global.js or commons.js?)
 
+  Style:
+    ☐ configure ESLint, use eslint-config-airbnb (see https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb)
+
+    ☐ apply rscss style guide to html and scss files (see http://rscss.io)
+      - edit index.html
+      - reorganize + re-style styles in style.scss into components/*.scss (one file for each 'component'; see rscss spec)
 
 UI:
   TODO's related to the user interface of the program.
