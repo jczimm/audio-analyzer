@@ -1,6 +1,6 @@
 ```
 Core:
-  ☐ fix audio analysis loop! @important
+  ✔ fix audio analysis loop! @important @done (15-11-30 00:17)
 
   ☐ write .afa files with write-streams (don't cache the great amount of analysis data in memory before writing the files statically!)
     ☐ for gzipping, after an .afa file is written, statically [read,] compress, replace it with an .afa.gz file

@@ -235,7 +235,7 @@ util.handleError = function handleError(err) {
 
 util.analyzerOptions = {
 	stereo: false,
-	audible: true
+	audible: false
 };
 
 export default util;

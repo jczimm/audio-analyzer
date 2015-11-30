@@ -260,7 +260,7 @@ function handleFiles(files) {
                 $('#interface, div#upload-button, #interface #blank-state-text').off('click');
             })
             
-        // errors are already handled in try..catch
+            // errors are already handled in try..catch
             .catch((err) => {
                 // console.log(err);
             });
@@ -435,6 +435,7 @@ function analyzeAudioTrack(filePath, {
         audio.autoplay = false;
         audio.preload = 'auto';
         audio.crossOrigin = 'anonymous';
+        audio.volume = 1;
         audio.src = filePath;
 
         var analyzer = audioAnalyzer(audio, util.analyzerOptions);
@@ -466,11 +467,11 @@ function analyzeAudioTrack(filePath, {
 
             // clean up audio context
             analyzer.ctx.close().then(() => {
-                // end progress loop
+                // update progress bar to complete state
                 progressBar.complete();
+                
+                // end progress loop, analysis loop
                 clearInterval(progressLoop);
-
-                // end analysis loop
                 clearInterval(analysisLoop);
 
                 resolve(results);
@@ -503,6 +504,20 @@ function analyzeAudioTrack(filePath, {
 
                 // analyze the audio file
                 console.log('analyzing %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(filePath));
+                
+        // _____/\\\\\\\\\____________/\\\\\\\\\___/\\\\\\\\\\\\\\\___/\\\\\\\\\\\________/\\\\\________/\\\\\_____/\\\_
+        //  ___/\\\\\\\\\\\\\_______/\\\////////___\///////\\\/////___\/////\\\///_______/\\\///\\\_____\/\\\\\\___\/\\\_       
+        //   __/\\\/////////\\\____/\\\/__________________\/\\\____________\/\\\________/\\\/__\///\\\___\/\\\/\\\__\/\\\_      
+        //    _\/\\\_______\/\\\___/\\\____________________\/\\\____________\/\\\_______/\\\______\//\\\__\/\\\//\\\_\/\\\_     
+        //     _\/\\\\\\\\\\\\\\\__\/\\\____________________\/\\\____________\/\\\______\/\\\_______\/\\\__\/\\\\//\\\\/\\\_    
+        //      _\/\\\/////////\\\__\//\\\___________________\/\\\____________\/\\\______\//\\\______/\\\___\/\\\_\//\\\/\\\_   
+        //       _\/\\\_______\/\\\___\///\\\_________________\/\\\____________\/\\\_______\///\\\__/\\\_____\/\\\__\//\\\\\\_  
+        //        _\/\\\_______\/\\\_____\////\\\\\\\\\________\/\\\_________/\\\\\\\\\\\_____\///\\\\\/______\/\\\___\//\\\\\_ 
+        //         _\///________\///_________\/////////_________\///_________\///////////________\/////________\///_____\/////__                                     
+                                                 
+                
+                audio.play();
+                
                 analysisLoop = setInterval(() => {
                     
                     // !!! analyzer.frequencies seems to produce only [0..]: FIXME
