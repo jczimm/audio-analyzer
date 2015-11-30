@@ -36,8 +36,8 @@ gulp.task('_serve', ['build'], function () {
 gulp.task('serve', function () {
     // Start browser process
     electron.start(function () {
+        // FIXME
         // when electron window closes, stop electron-connect
-        console.log(electron.electronProc);
         electron.electronProc.on("window-all-closed", function () {
             electron.stop();
         });
