@@ -117,16 +117,6 @@ ul.mdl-menu.main > li {
 
 /* -- */
 
-button.mdl-button.action-button {
-    position: fixed auto 0.7em 0.7em auto;
-    bottom: -100%;
-    transition: .3s bottom ease-out;
-}
-
-button#stop-button {
-    display: none;
-}
-
 
 /* prevent header from disappearing on screens < 1024px wide */
 
@@ -180,6 +170,15 @@ input#upload {
             }
         }
     }
+    button.mdl-button.action-button {
+        position: fixed auto 0.7em 0.7em auto;
+        bottom: -100%;
+        transition: .3s bottom ease-out;
+    }
+    
+    button#stop-button {
+        display: none;
+    }
     div#banner {
         display: block;
         position: fixed auto auto 1em 1em;
@@ -212,23 +211,41 @@ input#upload {
             cursor: context-menu;
         }
     }
+    // if interface is blank,
     &.blank {
         border: 4px dashed $grey-accent;
         padding: 2em;
-
+        
+        // then show blank state,
         > .blank-state {
             opacity: 1;
         }
+        // and hide track list
         > #track-list {
             display: none;
         }
     }
+    // if interface is NOT blank, (if has tracks)
     &:not(.blank) {
-        > button.mdl-button.action-button {
-            bottom: 0.7em;
+        // and also done, ('done' = no tracks left to analyze)
+        &.done {
+            // then hide FAB below page
+            > button.mdl-button.action-button {
+                bottom: -100%;
+            }
         }
-
+        // but if interface is NOT blank and also NOT done, (if still tracks left to analyze)
+        &:not(.done) {
+            // then show FAB
+            > button.mdl-button.action-button {
+                bottom: 0.7em;
+            }
+        }
+        // regardless of whether there are tracks left to analyze,
+        // if the interface is also currently NOT working ('working' = analyzing tracks)
         &:not(.working) {
+            // then show the banner
+            // (program should be in a "ready" state for analysis, banner saying that new tracks can be dropped)
             div#banner {
                 bottom: 1em;
             }
