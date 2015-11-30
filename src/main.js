@@ -1,5 +1,6 @@
-/* global MaterialDataTable */
+/* global actionButton, fileList, destPicker, MaterialDataTable, working */
 /* jshint esnext: true */
+
 const fs = require('fs');
 const path = require('path');
 
@@ -21,13 +22,17 @@ var trackListTable = new MaterialDataTable($trackList.get(0));
 
 //
 
-import FileList from './fileList';
+import ActionButton from './ActionButton';
+window.actionButton = new ActionButton({
+    $processButton: $("#process-button"),
+    $stopButton: $("#stop-button")
+});
 
-const fileList = new FileList({ trackListTable });
+import FileList from './FileList';
+window.fileList = new FileList({ trackListTable });
 
-import FilePickerDialog from './filePickerDialog';
-
-const destPicker = new FilePickerDialog();
+import FilePickerDialog from './FilePickerDialog';
+window.destPicker = new FilePickerDialog();
 
 //
 
@@ -38,7 +43,7 @@ $('#exit-button').click(() => {
 
 //
 
-var working = false;
+window.working = false;
 
 //
 
@@ -55,7 +60,7 @@ $('body')
         e.stopPropagation();
         e.preventDefault();
 
-        if (!working) e.originalEvent.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        if (!working) e.originalEvent.dataTransfer.dropEffect = 'copy'; // show the "copy" drop effect (i.e. with plus sign on win chrome)
     });
 
 $('#interface, div#upload-button, #interface #blank-state-text').click(() => {
@@ -75,6 +80,9 @@ $('.mdl-menu.main, .mdl-menu.main *').click(util.stopPropagation);
 function handleFileInputChange() {
     handleFiles($(this).get(0).files);
 }
+
+// TODO: separate this func esp. into its own module (alongside related functions?)
+// (modularize functions, group by their domain/purpose, whichever is more intuitive)
 
 const maxConcurrentCtxs = 1;
 
@@ -97,9 +105,7 @@ var handleProcessButtonClick = function handleProcessButtonClick() {
         working = true;
         $interface.addClass('working');
 
-        // hide #process-button, show #stop-button
-        $('#process-button').hide();
-        $('#stop-button').show();
+        actionButton.updateForState('processing');
 
         this.process(files);
     }).bind({
@@ -112,20 +118,28 @@ var handleProcessButtonClick = function handleProcessButtonClick() {
 
             var beforeEachTrack = () => { numProcessed++; };
 
-            var onOneTrackCompleted = function onOneTrackCompleted() {
+            var onOneTrackDone = function onOneTrackDone(file) {
+                // processFiles calls `onOneTrackDone(null)` when skipping over tracks
+                if (file !== null) {
+                    file.completed = true;
+                }
+                
                 // for every track completed, process the next one on the queue and have `processFiles` call back
                 // to this function after that track has completed
                 nextFile = util.sliceObj(files, numProcessed, numProcessed + 1);
-
+                
+                // if there is a nextFile,
                 if (!$.isEmptyObject(nextFile)) {
-                    processFiles(nextFile, { beforeEachTrack, onOneTrackCompleted });
+                    // process it, passing a reference back to `beforeEachTrack` and `onOneTrackOne`
+                    processFiles(nextFile, { beforeEachTrack, onOneTrackDone });
                 } else {
-                    $('#stop-button').hide();
-                    $('#process-button').show();
+                    // if there is no next track in the list, consider the process finished
+                    actionButton.updateForState('finished');
+                    working = false;
                 }
             };
 
-            processFiles(firstFiles, { beforeEachTrack, onOneTrackCompleted });
+            processFiles(firstFiles, { beforeEachTrack, onOneTrackDone });
         }
     })
 });
@@ -216,8 +230,7 @@ $('#stop-button').click(() => {
     }
 
     // show #process-button again
-    $("#process-button").show();
-    $('#stop-button').hide();
+    actionButton.updateForState('finished');
 });
 
 //
@@ -266,7 +279,7 @@ async function prepareFiles(filePaths) {
     }
 }
 
-function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
+function processFiles(files, { beforeEachTrack, onOneTrackDone }) {
     // set configuration variables to the values of the options' corresponding inputs in the interface
     var gzip = $('input#gzip').is(':checked'),
         pointsPerSecond = parseInt($pointsPerSecond.val());
@@ -282,7 +295,7 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
         // skip over unselected tracks and completed tracks
         if (!$entry.hasClass('is-selected') || $entry.hasClass('is-completed')) {
             beforeEachTrack();
-            onOneTrackCompleted();
+            onOneTrackDone(null);
             continue;
         }
 
@@ -349,7 +362,7 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
                     this.$entry.addClass('is-completed'); // mark entry as a completed track
 
                     this.$progressBar.removeClass('current');
-                    this.onOneTrackCompleted();
+                    this.onOneTrackDone(file);
                 }
             }
 
@@ -373,7 +386,7 @@ function processFiles(files, { beforeEachTrack, onOneTrackCompleted }) {
                 progressBar,
                 $progressBar,
                 $entry,
-                onOneTrackCompleted
+                onOneTrackDone
             });
         }
 
@@ -488,11 +501,11 @@ function analyzeAudioTrack(filePath, {
                 // remove an indeterminate status from progress bar
                 progressBar.start();
 
-                // analyze the audio
+                // analyze the audio file
                 console.log('analyzing %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(filePath));
                 analysisLoop = setInterval(() => {
                     
-                                    // !!! analyzer.frequencies seems to produce only [0..]: FIXME
+                    // !!! analyzer.frequencies seems to produce only [0..]: FIXME
                     frequencies = util.normalize(analyzer.frequencies(), {
                         from: 0,
                         to: 100,
