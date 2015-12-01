@@ -38,7 +38,6 @@
     "electron"
   ],
   "author": "Jacob Zimmerman <jczimm@jczimm.com> (http://jczimm.com)",
-  "contributors": [],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jczimm/audio-analyzer/issues"
