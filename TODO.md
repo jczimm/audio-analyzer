@@ -36,7 +36,7 @@ UI:
      ✔ disable checkbox when analyzing a track @done (15-10-01 09:32)
      ✔ when track analysis errs, turn progress bar red @done (15-10-01 09:38)
      ☐ FIXME: show a progress bar when saving an .afa file (replace .analysis-progress with an accent-color bar)
-     ☐ add cancel buttons onto cards in place of disabled checkbox
+     ☐ add small, animated loader (animated icon) onto cards in place of disabled checkbox during analysis
 
     General: 
      ☐ Implement electron-drag for title bar (replacing -webkit-app-region) (https://github.com/kapetan/electron-drag)
