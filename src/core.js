@@ -34,23 +34,23 @@ export default function analyzeAudioTrack(filePath, {
         var frequencies,
             freqBinCount = analyzer.analyser.frequencyBinCount,
             afaData = [];
-        
+
         //
-        
+
         var fileHash = '[FILE\'S CRYPTO DIGEST]'; // from `file` in `fileList.files`, `digest` property set in FileList.js
-                
+
         //
-        
+
         var doneAnalyzing = false;
 
         // although the audio file will not be "played" regularly, this event will still be
         // triggered when `audio.currentTime` is set to a value >= `audio.duration` in `analysis:${fileHash}` loop
         audio.addEventListener('ended', () => {
-            
+
             doneAnalyzing = true;
 
             loopsController.clearLoop(`analysis:${fileHash}`);
-            
+
             // if analysis is currently stopping or has been stopped (interface now in idle state),
             if (interfaceStateController.isState('stopping') || interfaceStateController.isState('idle')) {
                 // then close audio context and exit
@@ -71,12 +71,12 @@ export default function analyzeAudioTrack(filePath, {
                     },
                     sourcePath: filePath
                 };
-    
+
                 // clean up audio context
                 analyzer.ctx.close().then(() => {
                     // update progress bar to complete state
                     progressBar.complete();
-                    
+
                     // end progress loop
                     loopsController.clearInterval(`progress:${fileHash}`);
 
@@ -87,7 +87,7 @@ export default function analyzeAudioTrack(filePath, {
 
         audio.addEventListener('error', (e) => {
             doneAnalyzing = true;
-            
+
             var errorInfo = util.handleAudioLoadError(e);
 
             // clean up audio context
@@ -108,7 +108,7 @@ export default function analyzeAudioTrack(filePath, {
 
         var progress = 0,
             first = true;
-            
+
         audio.addEventListener('canplaythrough', (e) => {
             if (first) { // handling mysterious duplicate `audio`s being created for a single source
                 first = false;
@@ -118,7 +118,7 @@ export default function analyzeAudioTrack(filePath, {
 
                 // analyze the audio file
                 console.log('analyzing %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(filePath));
-                
+
                 //  ______/\\\\\\\\\____________/\\\\\\\\\___/\\\\\\\\\\\\\\\___/\\\\\\\\\\\________/\\\\\________/\\\\\_____/\\\_
                 //  ____/\\\\\\\\\\\\\_______/\\\////////___\///////\\\/////___\/////\\\///_______/\\\///\\\_____\/\\\\\\___\/\\\__
                 //  ___/\\\/////////\\\____/\\\/__________________\/\\\____________\/\\\________/\\\/__\///\\\___\/\\\/\\\__\/\\\__
@@ -127,15 +127,15 @@ export default function analyzeAudioTrack(filePath, {
                 //  __\/\\\/////////\\\__\//\\\___________________\/\\\____________\/\\\______\//\\\______/\\\___\/\\\_\//\\\/\\\__
                 //  __\/\\\_______\/\\\___\///\\\_________________\/\\\____________\/\\\_______\///\\\__/\\\_____\/\\\__\//\\\\\\__
                 //  __\/\\\_______\/\\\_____\////\\\\\\\\\________\/\\\_________/\\\\\\\\\\\_____\///\\\\\/______\/\\\___\//\\\\\__
-                //  __\///________\///_________\/////////_________\///_________\///////////________\/////________\///_____\/////___                       
-                                                 
-                
+                //  __\///________\///_________\/////////_________\///_________\///////////________\/////________\///_____\/////___
+
+
                 audio.play();
-                
+
                 loopsController.createLoop(`analysis:${fileHash}`, (next, err, data) => {
                     if (doneAnalyzing || interfaceStateController.isState('stopping') || interfaceStateController.isState('idle')) {
                         doneAnalyzing = true;
-                        return next("break");
+                        return next('break');
                     }
 
                     frequencies = util.normalize(analyzer.frequencies(), {
@@ -158,7 +158,7 @@ export default function analyzeAudioTrack(filePath, {
                         doneAnalyzing = true;
                         return;
                     }
-                    
+
                     // update progress bar
                     progressBar.set(progress);
                 }, { interval: 50 });

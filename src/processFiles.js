@@ -14,7 +14,7 @@ function processFiles(files, { beforeEachTrack, onOneTrackDone }) {
 
     var filePaths = Object.keys(files),
         tmpFilePath, file;
-        
+
     var $entry, progressBar, $progressBar;
 
     for (let i = 0; i < filePaths.length; i++) {
@@ -22,7 +22,7 @@ function processFiles(files, { beforeEachTrack, onOneTrackDone }) {
         if (interfaceStateController.isState('stopping') || interfaceStateController.isState('idle')) {
             return; // then exit
         }
-        
+
         tmpFilePath = filePaths[i];
         file = files[tmpFilePath];
 
@@ -34,9 +34,9 @@ function processFiles(files, { beforeEachTrack, onOneTrackDone }) {
             onOneTrackDone(null);
             continue;
         }
-        
+
         // PROGRESS BAR
-        
+
         progressBar = loadingStates.createProgressBar( /*"indeterminate"*/),
         $progressBar = $(progressBar.element_);
 
@@ -44,14 +44,14 @@ function processFiles(files, { beforeEachTrack, onOneTrackDone }) {
         $progressBar = util.withRefs($progressBar); // reattach references
 
         $progressBar.addClass('analysis-progress');
-        
+
         //
 
         let { analysisOpts, saveOpts } = createProgressOpts({ onOneTrackDone, file, $progressBar, progressBar, $entry });
 
         // exec. numProcessed++ so that when any track completes, the next available audio context will not be used to process this one
         beforeEachTrack();
-        
+
         analyzeAudioTrack(tmpFilePath, {
             pointsPerSecond,
             trackLength: file.trackLength,
@@ -126,7 +126,7 @@ function createProgressOpts({ onOneTrackDone, file, $progressBar, progressBar, $
                 var $icon = $('<i/>').addClass('icon material-icons').text('done');
                 this.$entry.find('> td.label > .mdl-checkbox').remove(); // remove checkbox
                 this.$entry.find('> td.label').append($icon); // add icon
-                
+
                 this.$entry.addClass('is-completed'); // mark entry as a completed track
 
                 this.$progressBar.removeClass('current');
@@ -157,7 +157,7 @@ function createProgressOpts({ onOneTrackDone, file, $progressBar, progressBar, $
             onOneTrackDone
         });
     }
-    
+
     return { analysisOpts, saveOpts };
 }
 

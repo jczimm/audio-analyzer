@@ -48,11 +48,11 @@ function process(files) {
         if (file !== null) {
             file.completed = true;
         }
-        
+
         // for every track completed, process the next one on the queue and have `processFiles` call back
         // to this function after that track has completed
         nextFile = util.sliceObj(files, numProcessed, numProcessed + 1);
-        
+
         // if there is a nextFile,
         if (!$.isEmptyObject(nextFile)) {
             // process it, passing a reference back to `beforeEachTrack` and `onOneTrackOne`
@@ -67,7 +67,7 @@ function process(files) {
     if (interfaceStateController.isState('stopping') || interfaceStateController.isState('idle')) {
         return; // then exit
     }
-    
+
     processFiles(firstFiles, { beforeEachTrack, onOneTrackDone });
 }
 

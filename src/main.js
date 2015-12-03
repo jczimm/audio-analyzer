@@ -15,8 +15,8 @@ window.loopsController = new LoopsController();
 
 import ActionButton from './ActionButton';
 window.actionButton = new ActionButton({
-    $processButton: $("#process-button"),
-    $stopButton: $("#stop-button")
+    $processButton: $('#process-button'),
+    $stopButton: $('#stop-button')
 });
 
 import FileList from './FileList';

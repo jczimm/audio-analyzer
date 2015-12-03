@@ -31,7 +31,7 @@ function handleFiles(files) {
                 // update interface the interface to idle state
                 interfaceStateController.state = 'idle';
             })
-            
+
             // errors are already handled in try..catch
             .catch((err) => {
                 // console.log(err);

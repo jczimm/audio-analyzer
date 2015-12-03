@@ -10,9 +10,8 @@
 			enumerable: true,
 			configurable: true
 		});
-	} 
-})
-(window, {
+	}
+})(window, {
 	// %TODO: migrate to properties of `optionsMenu` (OptionsMenu.js),
 	// have whatever scripts that currently access them from the global scope
 	// now access them through `optionsMenu`
@@ -21,7 +20,7 @@
 	$innerDestLabel: $('#destLabel span'),
 	$pointsPerSecond: $('input[type=range]#pointsPerSecond'),
     $pointsPerSecondCounter: $('span#pointsPerSecondCounter > span.inner'),
-	
+
 	// and have $interface into `interfaceStateController`
 	$interface: $('#interface'),
 	// and $tracklist and trackListTable into a `trackListController`? (TrackListController.js)

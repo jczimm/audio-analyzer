@@ -12,7 +12,7 @@ import util from './util';
 //
 //         // display files (automatically registers `filePath`'s and `entry`'s')
 //         return await * tmpFilePaths.map(::fileList.displayFile);
-//        
+//
 //     } catch (err) {
 //         util.handleError(err);
 //     }

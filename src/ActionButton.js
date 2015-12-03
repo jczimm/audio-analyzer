@@ -18,12 +18,12 @@ const stateNames = Object.keys(states);
 
 var state;
 class ActionButton {
-	
+
 	constructor({ $processButton, $stopButton }) {
-		
+
 		this.$processButton = $processButton;
 		this.$stopButton = $stopButton;
-		
+
 		this::bindButtonsToHandlers();
 	}
 
@@ -40,7 +40,7 @@ class ActionButton {
 				break;
 		}
 	}
-	
+
 	// returns boolean: whether to display the button
 	updateForState(newState) {
 		if (Array.includes(stateNames, newState)) {

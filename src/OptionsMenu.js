@@ -2,44 +2,44 @@
 
 
 export default class OptionsMenu {
-    
+
     constructor() {
-        
+
     }
-    
+
     bindHandlers() {
         $fileInput.change(handleFileInputChange);
         $pointsPerSecond.on('change input', handlePointsPerSecondRangeChange.bind($pointsPerSecond));
-        
+
         $('#chooseDestButton').click(() => {
             this.promptDestPicker();
         }); // same as `.click(null::this.promptDestPicker)` ?
-        
+
         //
-        
+
         this.init();
     }
-    
+
     init() {
         handlePointsPerSecondRangeChange.apply($pointsPerSecond);
     }
-    
+
     promptDestPicker() {
         var path = destPicker.pick()[0];
-    
+
         if (path) {
             $innerDestLabel.text(path);
             $destLabel.parent().addClass('filled');
             $('#chooseDestButton').removeClass('mdl-button--raised');
-            
+
             $destLabel
                 .off('mouseenter mouseleave') // remove hover handlers (only bound if this `promptDestPicker` called before)
                 .hover(...destLabelHover()); // and reapply them
         }
-    
+
         return path;
     }
-    
+
 }
 
 //
@@ -61,7 +61,7 @@ function handlePointsPerSecondRangeChange(e) {
     } else {
         $pointsPerSecondCounter.text(val);
     }
-} 
+}
 
 var destLabelHover = function destLabelHover() {
     var textWidth = $innerDestLabel.width(),
@@ -75,7 +75,7 @@ var destLabelHover = function destLabelHover() {
             function mouseIn() {
                 $innerDestLabel.animate({
                     right: `${rightPos}px`
-                }, time, 'linear', function () {
+                }, time, 'linear', function() {
                     $(this).stop();
                 });
             },

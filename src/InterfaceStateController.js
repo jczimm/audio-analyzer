@@ -2,16 +2,16 @@
 
 import handleFiles from './handleFiles.js';
 
-	
+
 // blank:		in blank state, track list is empty
-// idle:		track list has entries (an entry), entries may or may not be selected 
+// idle:		track list has entries (an entry), entries may or may not be selected
 // working:		program is analyzing track(s)
 // stopping:	(intermediate/pseudo state) analysis has been interrupted (by user or otherwise), going from working to idle state
 
 //                         +-----------------+
 //                         v                 |
 // +-----------+     +-----+-----+     +-----+-----+     : - - - - - :
-// |     -     |     |     .     |     |     %     |           x      
+// |     -     |     |     .     |     |     %     |           x
 // |   Blank   | --> |   Idle    | --> |  Working  | - > >> Stopping |
 // |   .blank  |     |  .done?   |     |  .working |           v
 // +-----------+     +----+------+     +-----------+     : - - + - - :
@@ -30,12 +30,12 @@ const states = {
 		// remove the classes corr to all possibles states from which the interface could now be changing
 		// > this animates in the '#process-button' FAB (via CSS)
 		$interface.removeClass('blank working');
-		
+
 		actionButton.updateForState('idle');
-		
+
 		// if all files are completed,
 		// TODO: wait unti file list is populated
-		
+
 		$interface.removeClass('done'); // re-setting below
 		if (!fileList.areTracksLeftForAnalysis()) {
 			// add .done class
@@ -45,7 +45,7 @@ const states = {
 	working() {
 				// .done might not be present
 		$interface.removeClass('done').addClass('working');
-		
+
 		// tell actionButton we're working; switches to stop button
 		actionButton.updateForState('working');
 	},
@@ -55,25 +55,25 @@ const states = {
 		loopsController.clearAllIntervals();
 
 		// remove all progress bars:
-		
+
 		var files = fileList.files,
 			$entry, $checkbox;
-			
+
 		// for each file,
 		for (let tmpFilePath in files) {
 			// for its corresponding entry element,
 			$entry = files[tmpFilePath].entry;
-			
+
 			// remove the progress bar
 			$entry.find('.mdl-progress').remove();
-			
+
 			// re-enable the checkbox
 			$checkbox = $entry.find('> td.label > .mdl-checkbox input[type=checkbox]').prop('disabled', false).parent().get(0);
 			if ($checkbox) $checkbox.MaterialCheckbox.checkDisabled();
 		}
-		
+
 		// no need to repeat code; instruct the controller to set the final state to idle
-		this.state = "idle";
+		this.state = 'idle';
 	}
 };
 const stateNames = Object.keys(states);
@@ -86,22 +86,22 @@ class InterfaceStateController {
 	constructor() {
 		this::bindBodyHandlers();
 	}
-	
+
 	get state() {
 		return state;
 	}
-	
+
 	set state(newState) {
 		if (Array.includes(stateNames, newState)) {
 			state = newState;
 			this::states[newState]();
-			
+
 			bindElementsForState(newState);
 		} else {
 			throw new Error('Cannot set interface state: Invalid state');
 		}
 	}
-	
+
 	isState(_state) {
 		return this.state === _state;
 	}
@@ -115,9 +115,9 @@ function bindBodyHandlers() {
 		.on('drop', (e) => {
 			e.stopPropagation();
 			e.preventDefault();
-	
+
 			var droppedFiles = e.originalEvent.dataTransfer.files;
-			
+
 			// if not in working state,
 			if (!this.isState('working')) {
 				// handle the files (filter & prepare the files; copy them to tmp, display them in the track list)
@@ -127,7 +127,7 @@ function bindBodyHandlers() {
 		.on('dragover', (e) => {
 			e.stopPropagation();
 			e.preventDefault();
-			
+
 			// if not in working state,
 			if (!this.isState('working')) {
 				// show the "copy" drop effect (i.e. with plus sign on win chrome)
@@ -145,7 +145,7 @@ const handlersForStates = {
 	idle() {
 		// unbind blank state click handlers (i.e. unbind from clicking $fileInput)
 		$('#interface, div#upload-button, #interface #blank-state-text').off('click');
-		// todo: optimize (use the globals?) ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^  
+		// todo: optimize (use the globals?) ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
 	}
 };
 const handlersForStatesStatesNames = Object.keys(handlersForStates);

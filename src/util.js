@@ -10,17 +10,17 @@ var util = {};
 
 util.normalize = function normalize(arr, { from = 0, to = 100, alreadyNormalized } = {}) { // alreadyNormalized?: { from, to }
 	var targetRange = to - from;
-	
-	if (typeof alreadyNormalized !== "object") {
+
+	if (typeof alreadyNormalized !== 'object') {
 		let min = Math.min.apply(Math, arr),
 			max = Math.max.apply(Math, arr),
 			range = max - min,
 			rangeChange = targetRange / range;
-			
+
 		if (targetRange < 0) {
 			throw new Error('`to` must be greater than `from` in option passed to util.normalize');
 		}
-	
+
 		// replace each value with:
 		// 	the proportion of its dist to the lowest value out of the range between the lowest and the highest, * target range
 		//	( (val - min) / (max - min) * targetRange )
@@ -40,11 +40,11 @@ util.copyFile = function copyFile(sourcePath, destDir) {
 		var readStream = fs.createReadStream(sourcePath),
 			writeStream = fs.createWriteStream(destPath);
 
-		writeStream.on('finish', function () {
+		writeStream.on('finish', function() {
 			resolve(path.relative(__dirname, destPath));
 		});
 
-		writeStream.on('error', function (err) {
+		writeStream.on('error', function(err) {
 			reject({
 				err: err,
 				msg: `Error copying ${sourcePath} to ${destPath}`,
@@ -155,11 +155,11 @@ util.getLengthOfAudioFile = function getLengthOfAudioFile(path) {
 		var audio = new Audio();
 		audio.src = path;
 
-		audio.addEventListener('canplaythrough', function (e) {
+		audio.addEventListener('canplaythrough', function(e) {
 			resolve(e.currentTarget.duration);
 		});
 
-		audio.addEventListener('error', function (e) {
+		audio.addEventListener('error', function(e) {
 			var errorInfo = util.handleAudioLoadError(e);
 			errorInfo.loc = 'util.getLengthOfAudioFile';
 			reject(errorInfo);
@@ -216,9 +216,9 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 	//      loc: "erreeFunction",
 	//      args: [argsPassedToErreeFunction], (optional)
 	//      notify: false,
-	//		fine: false // if true, the "error" should not be displayed as such; rather, it should be displayed as a mere notification  
+	//		fine: false // if true, the "error" should not be displayed as such; rather, it should be displayed as a mere notification
 	// }
-	
+
 	let method, prefix, content;
 	if (fine === true) {
 		method = 'info';
@@ -231,7 +231,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 	}
 	// e.g. `ERR @ erreeFunction(argPassed1, argPassed2): ${err}`
 	let errorMsg = [(prefix + `@ ${loc}` + (typeof args === 'object' ? `(${args.join(', ') })` : '') + ':'), content];
-	
+
 	// log error (console.info or console.error)
 	console[method](...errorMsg);
 
