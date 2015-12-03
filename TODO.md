@@ -56,6 +56,7 @@ Distribution:
 
 
 Before Open-Sourcing:
+  ☐ test development experience (cloning, installing deps (incl dev deps), and using the npm scripts)
   ☐ provide a release to the repo (an installer + the packaged application (the folder with the .exe, .dll's, folders etc.))
   ☐ add a decent CONTRIBUTING.md (link from README.md)
   ☐ create a demo gif to demo the UI and usage process (what the user does) (embed in README.md)
