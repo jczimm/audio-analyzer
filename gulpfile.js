@@ -9,7 +9,7 @@ var sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
     sass = require('gulp-sass'),
     babel = require('gulp-babel'),
-    jshint = require('gulp-jshint'),
+    eslint = require('gulp-eslint'),
     changed = require('gulp-changed'),
     gulpif = require('gulp-if'),
     exclude = require('gulp-ignore').exclude();
@@ -23,10 +23,7 @@ process.env.NODE_ENV = "development";
 const SRC_DIR = './src/';
 const APP_JS = ['./app.js'];
 
-// live-reloading application for development
-var electron = require('electron-connect').server.create({
-    path: './app/app.js'
-});
+var electron;
 
 gulp.task('dev', ['build', '_serve']); // serve after build is complete
 
@@ -36,6 +33,11 @@ gulp.task('_serve', ['build'], function () {
 });
 
 gulp.task('serve', function () {
+    // live-reloading application for development
+    electron = require('electron-connect').server.create({
+        path: './app/app.js'
+    });
+    
     // Start browser process
     electron.start(function () {
         // FIXME (use actual `electron`; electron.electronProc is just a childProc atm)
@@ -140,12 +142,18 @@ gulp.task('copy-the-rest', function (force) {
 
 // linting
 
+function isFixed(file) {
+	// Has ESLint fixed the file contents?
+	return file.eslint != null && file.eslint.fixed;
+}
+
 gulp.task('lint', ['lint:js']);
 
-gulp.task('lint:js', function () {
+gulp.task('lint:js', function (fix) {
     return gulp.src(JS_SRC.concat(GLOBAL_EXCLUDE))
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'));
+        .pipe(eslint({ fix: fix }))
+        .pipe(eslint.format())
+        .pipe(gulpif(isFixed, gulp.dest(SRC_DIR)));
 });
 
 

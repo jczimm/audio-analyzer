@@ -1,0 +1,12 @@
+{
+	"extends": "airbnb/base",
+	"parser": "babel-eslint",
+	"rules": {
+		"strict": 0,
+		"indent": 0
+	},
+	"globals": {
+		"$": "false"
+		// TODO
+	}
+}
