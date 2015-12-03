@@ -1,7 +1,5 @@
-/* jshint esnext: true */
 
-import ipc from 'ipc';
-import remote from 'remote';
+const { remote } = require('electron');
 
 const dialog = remote.require('dialog');
 const browserWindow = remote.getCurrentWindow();

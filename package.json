@@ -47,6 +47,7 @@
     "afa-file": "^1.0.4",
     "fs-extra": "^0.26.2",
     "jquery": "^2.1.4",
+    "loop": "^2.1.2",
     "web-audio-analyser": "^2.0.0"
   },
   "optionalDependencies": {

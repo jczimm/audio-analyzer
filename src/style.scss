@@ -182,11 +182,14 @@ input#upload {
     div#banner {
         display: block;
         position: fixed auto auto 1em 1em;
+        z-index: 4;
         padding: 0.5em;
         padding-bottom: 27px;
         height: 1.4em;
         background-color: $darker-grey-bg; // FIXME
         border: 2px solid black;
+        opacity: 0.9;
+        pointer-events: none;
 
         > span {
             color: $grey-accent;

@@ -19,8 +19,8 @@ Code Quality:
       ✔ loadingStates.js @done (15-11-23 19:00)
       ✔ notifications.js @done (15-11-23 19:01)
 
-    ☐ modularize functions in main.js (split main.js into multiple files; group functions by intuitive domain/purpose, create classes where intuitive)
-    ☐ organize globals (maybe use a global.js or commons.js?)
+    ✔ modularize functions in main.js (split main.js into multiple files; group functions by intuitive domain/purpose, create classes where intuitive) @done (15-12-03 00:39)
+    ✔ organize globals (maybe use a global.js or commons.js?) @done (15-12-03 00:39)
 
   Style:
     ☐ configure ESLint, use eslint-config-airbnb (see https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb)

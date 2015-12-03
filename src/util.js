@@ -1,4 +1,3 @@
-/* jshint esnext: true */
 
 const path = require('path');
 const fs = require('fs-extra');
@@ -9,11 +8,7 @@ import notifications from './notifications';
 
 var util = {};
 
-util.normalize = function normalize(arr, {
-	from = 0,
-	to = 100,
-	alreadyNormalized
-} = {}) { // alreadyNormalized?: { from, to }
+util.normalize = function normalize(arr, { from = 0, to = 100, alreadyNormalized } = {}) { // alreadyNormalized?: { from, to }
 	var targetRange = to - from;
 	
 	if (typeof alreadyNormalized !== "object") {
@@ -214,20 +209,34 @@ util.handleAudioLoadError = function handleAudioLoadError(e, reject) {
 
 //
 
-util.handleError = function handleError(err) {
-	// err :
+util.handleError = function handleError({ err, msg, loc, args, notify = false, fine = false }) {
 	// {
 	//      err: new Error(),
 	//      msg: "Error Message, displayed in notification if `notify: true`",
 	//      loc: "erreeFunction",
 	//      args: [argsPassedToErreeFunction], (optional)
-	//      notify: false
+	//      notify: false,
+	//		fine: false // if true, the "error" should not be displayed as such; rather, it should be displayed as a mere notification  
 	// }
+	
+	let method, prefix, content;
+	if (fine === true) {
+		method = 'info';
+		prefix = '';
+		content = msg;
+	} else {
+		method = 'error';
+		prefix = 'ERR';
+		content = err;
+	}
+	// e.g. `ERR @ erreeFunction(argPassed1, argPassed2): ${err}`
+	let errorMsg = [(prefix + `@ ${loc}` + (typeof args === 'object' ? `(${args.join(', ') })` : '') + ':'), content];
+	
+	// log error (console.info or console.error)
+	console[method](...errorMsg);
 
-	console.error((`ERR @ ${err.loc}` + (typeof err.args === 'object' ? `(${err.args.join(', ') })` : '') + ':'), err.err);
-
-	if (err.notify === true) {
-		notifications.err(err.msg);
+	if (notify === true) {
+		notifications.err(msg);
 	}
 };
 

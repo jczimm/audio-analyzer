@@ -1,7 +1,7 @@
 var app = require('app'); // Module to control application life.
 var BrowserWindow = require('browser-window'); // Module to create native browser window.
 
-var ipc = require('ipc');
+var ipc = require('electron').ipcMain;
 var dialog = require('dialog');
 
 var liveReloadClient = require('electron-connect').client;
@@ -65,7 +65,8 @@ app.on('ready', function() {
         icon: "./assets/win/icon.ico"
     });
 
-    mainWindow.loadUrl('file://' + __dirname + '/index.html');
+    console.log(process.cwd()); // fix gulpfile.js seemingly not exec. "electron app" within src/
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
 
     // If app.js is being run in a development context (e.g. by gulpfile.js)
     if (process.env.NODE_ENV === "development") {

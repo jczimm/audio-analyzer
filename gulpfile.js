@@ -1,8 +1,8 @@
-/* global sourcemaps, gutil, debug, rucksack, autoprefixer, sass, babel, jshint, changed, gulpif, exclude */
 console.log("Running " + __filename + "...");
 
-var gulp = require('gulp-param')(require('gulp'), process.argv),
-    sourcemaps = require('gulp-sourcemaps'),
+var gulp = require('gulp-param')(require('gulp'), process.argv);
+
+var sourcemaps = require('gulp-sourcemaps'),
     gutil = require('gulp-util'),
     debug = require('gulp-debug'),
     rucksack = require('gulp-rucksack'),
@@ -24,7 +24,9 @@ const SRC_DIR = './src/';
 const APP_JS = ['./app.js'];
 
 // live-reloading application for development
-var electron = require('electron-connect').server.create();
+var electron = require('electron-connect').server.create({
+    path: './app/app.js'
+});
 
 gulp.task('dev', ['build', '_serve']); // serve after build is complete
 
@@ -36,7 +38,7 @@ gulp.task('_serve', ['build'], function () {
 gulp.task('serve', function () {
     // Start browser process
     electron.start(function () {
-        // FIXME
+        // FIXME (use actual `electron`; electron.electronProc is just a childProc atm)
         // when electron window closes, stop electron-connect
         electron.electronProc.on("window-all-closed", function () {
             electron.stop();

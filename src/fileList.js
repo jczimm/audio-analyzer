@@ -21,7 +21,8 @@ class FileList {
 			completed: false
 		};
     }
-
+	
+	// todo: turn into an async function
     displayFile (filePath) {
 
 		var fileName = path.basename(filePath),
@@ -49,12 +50,12 @@ class FileList {
 					
 					$row.appendTo($trackList.find('> tbody'));
 				
-					// hacky...
+					// hacky... use MDL api to check the checkbox?
 					$row.find('input[type=checkbox]').click();
 				
 					trackLength = trackLengthSeconds;
 					this.addFile(filePath, { $entry: util.withRefs($row), trackLength });
-				
+					
 					resolve(filePath);
 				})
 				.catch((err) => {
@@ -66,6 +67,10 @@ class FileList {
 				});
 		});
     }
+	
+	areTracksLeftForAnalysis() {
+		return Array.includes($.map(this.files, file => file.completed === true), false);
+	}
 }
 
 export default FileList;
