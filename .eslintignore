@@ -1,4 +1,7 @@
 node_modules/**
 app/**
 
+app.js
+gulpfile.js
+
 src/mainOld.js
