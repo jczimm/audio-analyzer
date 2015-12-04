@@ -58,7 +58,7 @@ function startFiles(files) {
     process(files);
 }
 
-function handleProcessButtonClick() {
+export default function handleProcessButtonClick() {
     if (!destPicker.paths[0]) {
         const path = optionsMenu.promptDestPicker();
 
@@ -71,5 +71,3 @@ function handleProcessButtonClick() {
         startFiles(fileList.files);
     }
 }
-
-export default handleProcessButtonClick;

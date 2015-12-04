@@ -27,7 +27,7 @@ function bindButtonsToHandlers() {
 
 //
 
-class ActionButton {
+export default class ActionButton {
 
 	constructor({ $processButton, $stopButton }) {
 		this.$processButton = $processButton;
@@ -64,6 +64,3 @@ class ActionButton {
 		return states[newState].apply(this);
 	}
 }
-
-
-export default ActionButton;

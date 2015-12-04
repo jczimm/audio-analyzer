@@ -5,7 +5,7 @@ const fs = require('fs');
 
 import AFAFile from 'afa-file';
 
-class FileWriter {
+export default class FileWriter {
 
     constructor() {
 
@@ -77,6 +77,3 @@ class FileWriter {
     }
 
 }
-
-
-export default FileWriter;

@@ -4,7 +4,7 @@ const { remote } = require('electron');
 const dialog = remote.require('dialog');
 const browserWindow = remote.getCurrentWindow();
 
-class FilePickerDialog {
+export default class FilePickerDialog {
 	constructor() {
 		this.paths = [];
 	}
@@ -17,5 +17,3 @@ class FilePickerDialog {
 		return this.paths;
 	}
 }
-
-export default FilePickerDialog;

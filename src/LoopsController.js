@@ -1,7 +1,7 @@
 import Loop from 'loop';
 
 
-class LoopsController {
+export default class LoopsController {
 	constructor() {
 		this.loops = {};
 		this.intervals = {};
@@ -61,5 +61,3 @@ class LoopsController {
 		this.clearIntervals(Object.keys(this.intervals));
 	}
 }
-
-export default LoopsController;

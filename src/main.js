@@ -1,6 +1,7 @@
 /* global trackListTable, interfaceStateController, destPicker, $fileInput  */
 
-require('./globals');
+import registerGlobals from './globals';
+registerGlobals(window);
 
 //
 
