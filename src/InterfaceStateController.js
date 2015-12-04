@@ -56,12 +56,15 @@ const states = {
 
 		// remove all progress bars:
 
-		var files = fileList.files,
-			$entry, $checkbox;
+		const files = fileList.files;
+		const fileIds = Object.keys(files);
+		let $entry, $checkbox,
+			tmpFilePath;
 
-		// for each file,
-		for (let tmpFilePath in files) {
+		// for each file
+		for (let i = 0; i < fileIds.length; i++) {
 			// for its corresponding entry element,
+			tmpFilePath = fileIds[i];
 			$entry = files[tmpFilePath].entry;
 
 			// remove the progress bar
@@ -74,40 +77,9 @@ const states = {
 
 		// no need to repeat code; instruct the controller to set the final state to idle
 		this.state = 'idle';
-	}
+	},
 };
 const stateNames = Object.keys(states);
-
-//
-
-var state;
-class InterfaceStateController {
-
-	constructor() {
-		this::bindBodyHandlers();
-	}
-
-	get state() {
-		return state;
-	}
-
-	set state(newState) {
-		if (Array.includes(stateNames, newState)) {
-			state = newState;
-			this::states[newState]();
-
-			bindElementsForState(newState);
-		} else {
-			throw new Error('Cannot set interface state: Invalid state');
-		}
-	}
-
-	isState(_state) {
-		return this.state === _state;
-	}
-}
-
-//
 
 function bindBodyHandlers() {
 	// handle file-dropping
@@ -116,7 +88,7 @@ function bindBodyHandlers() {
 			e.stopPropagation();
 			e.preventDefault();
 
-			var droppedFiles = e.originalEvent.dataTransfer.files;
+			const droppedFiles = e.originalEvent.dataTransfer.files;
 
 			// if not in working state,
 			if (!this.isState('working')) {
@@ -146,14 +118,41 @@ const handlersForStates = {
 		// unbind blank state click handlers (i.e. unbind from clicking $fileInput)
 		$('#interface, div#upload-button, #interface #blank-state-text').off('click');
 		// todo: optimize (use the globals?) ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-	}
+	},
 };
 const handlersForStatesStatesNames = Object.keys(handlersForStates);
 
-function bindElementsForState(state) {
-	if (Array.includes(handlersForStatesStatesNames, state)) {
-		handlersForStates[state]();
+function bindElementsForState(newState) {
+	if (Array.includes(handlersForStatesStatesNames, newState)) {
+		handlersForStates[newState]();
 	} // don't throw an error (since we don't have handlers to bind for entering all states)
 }
 
-export default InterfaceStateController;
+//
+
+let state;
+export default class InterfaceStateController {
+
+	constructor() {
+		this::bindBodyHandlers(); // eslint-disable-line
+	}
+
+	get state() {
+		return state;
+	}
+
+	set state(newState) {
+		if (Array.includes(stateNames, newState)) {
+			state = newState;
+			this::states[newState](); // eslint-disable-line
+
+			bindElementsForState(newState);
+		} else {
+			throw new Error('Cannot set interface state: Invalid state');
+		}
+	}
+
+	isState(_state) {
+		return this.state === _state;
+	}
+}

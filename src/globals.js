@@ -1,14 +1,17 @@
 /* global $, MaterialDataTable */
 
-(function(scope, globals) {
-	for (let key in globals) {
+((scope, globals) => {
+	const keys = Object.keys(globals);
+	let key;
+	for (let i = 0; i < keys.length; i++) {
+		key = keys[i];
 		// effectively simulates: `const scope[key] = globals[key];`
 		// http://stackoverflow.com/a/10843598/3435077
 		Object.defineProperty(scope, key, {
 			value: globals[key],
 			writable: false,
 			enumerable: true,
-			configurable: true
+			configurable: true,
 		});
 	}
 })(window, {
@@ -25,6 +28,6 @@
 	$interface: $('#interface'),
 	// and $tracklist and trackListTable into a `trackListController`? (TrackListController.js)
 	$trackList: $('#track-list'),
-	trackListTable: new MaterialDataTable($('#track-list').get(0))
+	trackListTable: new MaterialDataTable($('#track-list').get(0)),
 	// if remove all globals, dissolve this file? or keep in repo but not use?
 });

@@ -16,7 +16,7 @@ window.loopsController = new LoopsController();
 import ActionButton from './ActionButton';
 window.actionButton = new ActionButton({
     $processButton: $('#process-button'),
-    $stopButton: $('#stop-button')
+    $stopButton: $('#stop-button'),
 });
 
 import FileList from './FileList';
@@ -42,4 +42,3 @@ $('#exit-button').click(() => {
 import util from './util';
 $('#interface #track-list').click(util.stopPropagation);
 $('.mdl-menu.main, .mdl-menu.main *').click(util.stopPropagation);
-

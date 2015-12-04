@@ -16,24 +16,28 @@ class FileWriter {
         gzip = false,
         progressBar = {
             start() { },
-            set(progress) { },
+            set(progress) { }, // eslint-disable-line no-unused-vars
             error() { },
-            complete() { }
-        }
+            complete() { },
+        },
     }) {
-        var folder = destPicker.paths[0];
-        var dest = path.resolve(folder, path.basename(sourcePath)).replace(/\.[a-zA-Z]*$/i, '.afa');
+        const destFolder = destPicker.paths[0];
+
+        // resolve destination for file to the file in the dest folder picked
+        let dest = path.resolve(destFolder, path.basename(sourcePath))
+            // and then change the extension to .afa
+            .replace(new RegExp(path.extname(sourcePath) + '$'), '.afa');
 
         progressBar.start();
 
-        var file = new AFAFile(analysis);
+        const file = new AFAFile(analysis);
 
         return new Promise((resolve, reject) => {
             if (dest === __dirname) {
                 return reject({
                     msg: 'Destination directory not set!',
                     loc: 'saveDataToFile',
-                    notify: true
+                    notify: true,
                 });
             }
 
@@ -58,7 +62,7 @@ class FileWriter {
                             err: err,
                             msg: 'Error while gzipping file',
                             loc: 'AFAFile.prototype.toGzipped',
-                            notify: true
+                            notify: true,
                         });
                     });
             } else {

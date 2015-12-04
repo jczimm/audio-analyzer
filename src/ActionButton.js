@@ -10,21 +10,32 @@ const states = {
 	},
 	working() {
 		this.switchTo('stopButton');
-	}
+	},
 };
 const stateNames = Object.keys(states);
 
 //
 
-var state;
+import handleProcessButtonClick from './handleProcessButtonClick';
+function bindButtonsToHandlers() {
+	this.$processButton.click(handleProcessButtonClick);
+
+	this.$stopButton.click(() => {
+		interfaceStateController.state = 'stopping';
+	});
+}
+
+//
+
 class ActionButton {
 
 	constructor({ $processButton, $stopButton }) {
-
 		this.$processButton = $processButton;
 		this.$stopButton = $stopButton;
 
-		this::bindButtonsToHandlers();
+		this::bindButtonsToHandlers(); // eslint-disable-line
+
+		this.state = undefined;
 	}
 
 	switchTo(name) {
@@ -38,27 +49,20 @@ class ActionButton {
 				this.$stopButton.show();
 				this.$processButton.hide();
 				break;
+
+			default: break;
 		}
 	}
 
 	// returns boolean: whether to display the button
 	updateForState(newState) {
-		if (Array.includes(stateNames, newState)) {
-			state = newState;
-			return states[newState].apply(this);
-		} else {
+		if (!Array.includes(stateNames, newState)) {
 			throw new Error('Invalid state');
 		}
+
+		this.state = newState;
+		return states[newState].apply(this);
 	}
-}
-
-import handleProcessButtonClick from './handleProcessButtonClick';
-function bindButtonsToHandlers() {
-	this.$processButton.click(handleProcessButtonClick);
-
-	this.$stopButton.click(() => {
-		interfaceStateController.state = 'stopping';
-	});
 }
 
 

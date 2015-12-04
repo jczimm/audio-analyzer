@@ -5,7 +5,7 @@ import util from './util';
 // todo: try making it work as an async func again... maybe babel has improved?
 // (problem had been that it was not actually awaiting the .displayFile's)
 
-//old code:
+// old code:
 // export default async function prepareFiles(filePaths) {
 //     try {
 //         let tmpFilePaths = await util.tmp.copyFilesToTmp(filePaths);
@@ -20,10 +20,10 @@ import util from './util';
 
 
 export default function prepareFile(filePaths) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
         util.tmp.copyFilesToTmp(filePaths) //
             .then((tmpFilePaths) => {
-                Promise.all(tmpFilePaths.map(::fileList.displayFile)) //
+                Promise.all(tmpFilePaths.map(::fileList.displayFile)) // eslint-disable-line
                     .then((displayedFilePaths) => {
                         resolve(displayedFilePaths); //
                     }).catch(util.handleErr);

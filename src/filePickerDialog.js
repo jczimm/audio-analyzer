@@ -12,7 +12,7 @@ class FilePickerDialog {
 	pick() {
 		this.paths = dialog.showOpenDialog(browserWindow, {
 			title: 'Select Destination for Analysis Files',
-			properties: ['openDirectory']
+			properties: ['openDirectory'],
 		}) || [];
 		return this.paths;
 	}

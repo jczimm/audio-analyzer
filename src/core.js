@@ -11,13 +11,13 @@ export default function analyzeAudioTrack(filePath, {
     trackLength,
     progressBar = {
         start() { },
-        set(progress) { },
+        set(progress) { }, // eslint-disable-line no-unused-vars
         error() { },
-        complete() { }
-    }
+        complete() { },
+    },
 }) {
     return new Promise((resolve, reject) => {
-        var audio = new Audio();
+        const audio = new Audio();
 
         // configure `audio`
         audio.autoplay = false;
@@ -28,25 +28,27 @@ export default function analyzeAudioTrack(filePath, {
 
         audio.src = filePath;
 
-        var analyzer = audioAnalyzer(audio, util.analyzerOptions);
+        const analyzer = audioAnalyzer(audio, util.analyzerOptions);
         analyzer.analyser.smoothingTimeConstant = 0.3;
 
-        var frequencies,
-            freqBinCount = analyzer.analyser.frequencyBinCount,
-            afaData = [];
+        const freqBinCount = analyzer.analyser.frequencyBinCount;
+        const afaData = [];
 
         //
 
-        var fileHash = '[FILE\'S CRYPTO DIGEST]'; // from `file` in `fileList.files`, `digest` property set in FileList.js
+        const fileHash = '[FILE\'S CRYPTO DIGEST]'; // from `file` in `fileList.files`, `digest` property set in FileList.js
+        const speed = 1 / pointsPerSecond;
 
         //
 
-        var doneAnalyzing = false;
+        let doneAnalyzing = false,
+            frequencies,
+            progress = 0,
+            first = true;
 
         // although the audio file will not be "played" regularly, this event will still be
         // triggered when `audio.currentTime` is set to a value >= `audio.duration` in `analysis:${fileHash}` loop
         audio.addEventListener('ended', () => {
-
             doneAnalyzing = true;
 
             loopsController.clearLoop(`analysis:${fileHash}`);
@@ -58,18 +60,18 @@ export default function analyzeAudioTrack(filePath, {
                     reject({
                         msg: 'oh, stopped... ignore me, just killing the sequence',
                         loc: 'analyzeAudioTrack',
-                        fine: true
+                        fine: true,
                     });
                 });
             } else { // else, resolve results
                 console.log('successfully created .afa file for %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(filePath));
 
-                var results = {
+                const results = {
                     analysis: {
                         data: afaData,
-                        freqBinCount: freqBinCount // array of Uint8Array's
+                        freqBinCount: freqBinCount, // array of Uint8Array's
                     },
-                    sourcePath: filePath
+                    sourcePath: filePath,
                 };
 
                 // clean up audio context
@@ -88,7 +90,7 @@ export default function analyzeAudioTrack(filePath, {
         audio.addEventListener('error', (e) => {
             doneAnalyzing = true;
 
-            var errorInfo = util.handleAudioLoadError(e);
+            const errorInfo = util.handleAudioLoadError(e);
 
             // clean up audio context
             analyzer.ctx.close().then(() => {
@@ -103,13 +105,7 @@ export default function analyzeAudioTrack(filePath, {
             });
         });
 
-
-        var speed = 1 / pointsPerSecond;
-
-        var progress = 0,
-            first = true;
-
-        audio.addEventListener('canplaythrough', (e) => {
+        audio.addEventListener('canplaythrough', () => {
             if (first) { // handling mysterious duplicate `audio`s being created for a single source
                 first = false;
 
@@ -132,7 +128,7 @@ export default function analyzeAudioTrack(filePath, {
 
                 audio.play();
 
-                loopsController.createLoop(`analysis:${fileHash}`, (next, err, data) => {
+                loopsController.createLoop(`analysis:${fileHash}`, (next) => {
                     if (doneAnalyzing || interfaceStateController.isState('stopping') || interfaceStateController.isState('idle')) {
                         doneAnalyzing = true;
                         return next('break');
@@ -143,8 +139,8 @@ export default function analyzeAudioTrack(filePath, {
                         to: 100,
                         alreadyNormalized: { // just scale the values; `getByteFrequencyData` outputs a normalized array from 0 - 255
                             from: 0,
-                            to: 255
-                        }
+                            to: 255,
+                        },
                     });
                     afaData.push(frequencies);
 

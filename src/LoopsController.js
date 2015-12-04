@@ -13,7 +13,7 @@ class LoopsController {
 
 		console.info('creating loop %s', loopId);
 
-		var loop = new Loop();
+		const loop = new Loop();
 
 		this.loops[loopId] = loop;
 		loop.run(fn);

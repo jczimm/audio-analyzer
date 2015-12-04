@@ -3,7 +3,15 @@
 	"parser": "babel-eslint",
 	"rules": {
 		"strict": 0,
-		"indent": 0
+		"indent": 0,
+		"one-var": [1, {
+			"var": "always", // Exactly one var declaration per function
+			"let": "always", // Exactly one let declaration per block
+			"const": "never" // Exactly one declarator per const declaration per block
+		}],
+		"no-console": 0,
+		"no-loop-func": 0,
+		"no-cond-assign": [2, "except-parens"]
 	},
 	"globals": {
 		"$": "false"

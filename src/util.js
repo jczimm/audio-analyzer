@@ -6,50 +6,59 @@ import notifications from './notifications';
 
 // GENERAL UTILITIES
 
-var util = {};
+const util = {};
+
+// only to be used within `util.normalize`
+function _normalize(arr, { min, rangeChange, from }) {
+	// replace each value with:
+	// 	the proportion of its dist to the minimum value between the minimum and the maximum, * target range
+	//	( (val - min) / (max - min) * targetRange )
+	//	e.g. [0,1,2] => [0,50,100]
+	return arr.map(val => (((val - min) * rangeChange) || 0) + from); // if max - min === 0, will yield NaN -> 0
+}
 
 util.normalize = function normalize(arr, { from = 0, to = 100, alreadyNormalized } = {}) { // alreadyNormalized?: { from, to }
-	var targetRange = to - from;
+	const targetRange = to - from;
 
+	// if no `alreadyNormalized` object was passed, normalize with the default behavior (min and max as the )
 	if (typeof alreadyNormalized !== 'object') {
-		let min = Math.min.apply(Math, arr),
-			max = Math.max.apply(Math, arr),
-			range = max - min,
-			rangeChange = targetRange / range;
+		const min = Math.min.apply(Math, arr);
+		const max = Math.max.apply(Math, arr);
+
+		const range = max - min;
+		const rangeChange = targetRange / range;
 
 		if (targetRange < 0) {
 			throw new Error('`to` must be greater than `from` in option passed to util.normalize');
 		}
 
-		// replace each value with:
-		// 	the proportion of its dist to the lowest value out of the range between the lowest and the highest, * target range
-		//	( (val - min) / (max - min) * targetRange )
-		//	e.g. [0,1,2] => [0,50,100]
-		return arr.map(val => (((val - min) * rangeChange) || 0) + from); // if max - min === 0, will yield NaN -> 0
-	} else {
-		let range = alreadyNormalized.to - alreadyNormalized.from,
-			rangeChange = targetRange / range;
-		return arr.map(val => (((val - alreadyNormalized.from) * rangeChange) || 0) + from);
+		return _normalize(arr, { min, rangeChange, from });
 	}
+
+	// however, if an `alreadyNormalized` object was passed, normalize from the given range (min and max as provided)
+				// max					 min
+	const range = alreadyNormalized.to - alreadyNormalized.from;
+	const rangeChange = targetRange / range;
+	return _normalize(arr, { min: alreadyNormalized.from, rangeChange, from });
 };
 
 util.copyFile = function copyFile(sourcePath, destDir) {
 	return new Promise((resolve, reject) => {
-		var destPath = path.resolve(destDir, path.basename(sourcePath));
+		const destPath = path.resolve(destDir, path.basename(sourcePath));
 
-		var readStream = fs.createReadStream(sourcePath),
-			writeStream = fs.createWriteStream(destPath);
+		const readStream = fs.createReadStream(sourcePath);
+		const writeStream = fs.createWriteStream(destPath);
 
-		writeStream.on('finish', function() {
+		writeStream.on('finish', () => {
 			resolve(path.relative(__dirname, destPath));
 		});
 
-		writeStream.on('error', function(err) {
+		writeStream.on('error', (err) => {
 			reject({
 				err: err,
 				msg: `Error copying ${sourcePath} to ${destPath}`,
 				loc: 'util.copyFile',
-				notify: false
+				notify: false,
 			});
 		});
 
@@ -72,12 +81,16 @@ util.copyFile = function copyFile(sourcePath, destDir) {
 // NOTE: util.construct and util.namedFunction need testing
 
 util.sliceObj = function sliceObj(obj, start, end) {
-	var sliced = {};
-	var i = 0;
+	const sliced = {};
 
-	for (var k in obj) {
-		if (i >= start && i < end)
+	const objKeys = Object.keys(obj);
+
+	let i = 0, k;
+	for (let j = 0; j < objKeys.length; j++) {
+		k = objKeys[j];
+		if (i >= start && i < end) {
 			sliced[k] = obj[k];
+		}
 
 		i++;
 	}
@@ -150,17 +163,17 @@ util.tmp.cleanUp = function cleanUp() {
 
 // AUDIO UTILIES
 
-util.getLengthOfAudioFile = function getLengthOfAudioFile(path) {
+util.getLengthOfAudioFile = function getLengthOfAudioFile(srcPath) {
 	return new Promise((resolve, reject) => {
-		var audio = new Audio();
-		audio.src = path;
+		const audio = new Audio();
+		audio.src = srcPath;
 
-		audio.addEventListener('canplaythrough', function(e) {
+		audio.addEventListener('canplaythrough', (e) => {
 			resolve(e.currentTarget.duration);
 		});
 
-		audio.addEventListener('error', function(e) {
-			var errorInfo = util.handleAudioLoadError(e);
+		audio.addEventListener('error', (e) => {
+			const errorInfo = util.handleAudioLoadError(e);
 			errorInfo.loc = 'util.getLengthOfAudioFile';
 			reject(errorInfo);
 		});
@@ -168,17 +181,19 @@ util.getLengthOfAudioFile = function getLengthOfAudioFile(path) {
 };
 
 util.convertSecondsToHHMMSS = function convertSecondsToHHMMSS(seconds) {
-	var date = new Date(1970, 0, 1);
+	const date = new Date(1970, 0, 1);
 	date.setSeconds(seconds);
 	return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, '$1');
 };
 
 util.handleAudioLoadError = function handleAudioLoadError(e, reject) {
-	var err = e.currentTarget.error,
-		errMsg;
+	const err = e.currentTarget.error;
+
+	let errMsg;
 
 	switch (err.code) {
 		case err.MEDIA_ERR_ABORTED:
+		default:
 			errMsg = 'Unknown error';
 			break;
 
@@ -195,11 +210,11 @@ util.handleAudioLoadError = function handleAudioLoadError(e, reject) {
 			break;
 	}
 
-	var errorInfo = {
+	const errorInfo = {
 		err: err,
 		msg: errMsg,
 		loc: 'util.handleAudioLoadError',
-		notify: undefined
+		notify: undefined,
 	};
 
 	if (typeof reject === 'function') {
@@ -230,7 +245,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 		content = err;
 	}
 	// e.g. `ERR @ erreeFunction(argPassed1, argPassed2): ${err}`
-	let errorMsg = [(prefix + `@ ${loc}` + (typeof args === 'object' ? `(${args.join(', ') })` : '') + ':'), content];
+	const errorMsg = [(prefix + `@ ${loc}` + (typeof args === 'object' ? `(${args.join(', ') })` : '') + ':'), content];
 
 	// log error (console.info or console.error)
 	console[method](...errorMsg);
@@ -244,7 +259,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 
 util.analyzerOptions = {
 	stereo: false,
-	audible: false
+	audible: false,
 };
 
 export default util;

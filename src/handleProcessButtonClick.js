@@ -12,38 +12,19 @@ import processFiles from './processFiles';
 
 
 const maxConcurrentCtxs = 1;
-function handleProcessButtonClick() {
 
-    if (!destPicker.paths[0]) {
-        var path = optionsMenu.promptDestPicker();
-
-        if (path !== undefined && path.length > 0) {
-            startFiles(fileList.files);
-        } else {
-            notifications.err('Error: No destination directory was provided. [Try Again]'); // TODO: make [Try Again] a text button (material toast "action")
-        }
-    } else {
-        startFiles(fileList.files);
-    }
-
-}
-
-function startFiles(files) {
-    interfaceStateController.state = 'working';
-
-    process(files);
-}
 
 function process(files) {
     // process the first batch of files
+    let numProcessed = 0, nextFile;
 
-    var numProcessed = 0,
-        firstFiles = util.sliceObj(files, 0, maxConcurrentCtxs),
-        nextFile;
+    const firstFiles = util.sliceObj(files, 0, maxConcurrentCtxs);
 
-    var beforeEachTrack = () => { numProcessed++; };
+    const beforeEachTrack = function beforeEachTrack() {
+        numProcessed++;
+    };
 
-    var onOneTrackDone = function onOneTrackDone(file) {
+    const onOneTrackDone = function onOneTrackDone(file) {
         // processFiles calls `onOneTrackDone(null)` when skipping over tracks
         if (file !== null) {
             file.completed = true;
@@ -69,6 +50,26 @@ function process(files) {
     }
 
     processFiles(firstFiles, { beforeEachTrack, onOneTrackDone });
+}
+
+function startFiles(files) {
+    interfaceStateController.state = 'working';
+
+    process(files);
+}
+
+function handleProcessButtonClick() {
+    if (!destPicker.paths[0]) {
+        const path = optionsMenu.promptDestPicker();
+
+        if (path !== undefined && path.length > 0) {
+            startFiles(fileList.files);
+        } else {
+            notifications.err('Error: No destination directory was provided. [Try Again]'); // TODO: make [Try Again] a text button (material toast "action")
+        }
+    } else {
+        startFiles(fileList.files);
+    }
 }
 
 export default handleProcessButtonClick;
