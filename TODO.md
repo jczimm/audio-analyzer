@@ -2,6 +2,15 @@
 Core:
   ✔ fix audio analysis loop! @important @done (15-11-30 00:17)
 
+  ☐ create crypto digests of files imported to prevent files from being imported twice
+  ☐ use files' crypto digests as ids in fileList.files and for tagging loops (in loopsController.loops)
+
+  ☐ implement "fast mode"; instead of reading freq data in measures according to the sample rate, read freq data live at set intervals from the audio file, playing back at a given speed
+    - if sample rate <= 1000 Hz, then analysis interval = (1000 / sample rate) ms, playback speed = 1
+    - else (if sample rate > 1000 hz), then analysis interval = 1 ms, playback speed = (1000 / sample rate)
+
+  ☐ use a test .wav file to test whether or not computer audio output is working correctly (play it and analyze time domain data; if array is [0..], don't proceed with analysis processes (make a toast notification... maybe with longer timeout?)) 
+
   ☐ write .afa files with write-streams (don't cache the great amount of analysis data in memory before writing the files statically at the end!)
     ☐ for gzipping, after an .afa file is written, statically [read,] compress, and replace it with an .afa.gz file
 
