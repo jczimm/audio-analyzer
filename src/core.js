@@ -7,6 +7,7 @@ import util from './util';
 import audioAnalyzer from 'web-audio-analyser';
 
 export default function analyzeAudioTrack(filePath, {
+    fileHash,
     pointsPerSecond = 1000,
     trackLength,
     progressBar = {
@@ -36,7 +37,6 @@ export default function analyzeAudioTrack(filePath, {
 
         //
 
-        const fileHash = '[FILE\'S CRYPTO DIGEST]'; // from `file` in `fileList.files`, `digest` property set in FileList.js
         const speed = 1 / pointsPerSecond;
 
         //

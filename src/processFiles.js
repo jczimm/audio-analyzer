@@ -122,6 +122,7 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
         beforeEachTrack();
 
         analyzeAudioTrack(tmpFilePath, {
+            fileHash: file.fileHash,
             pointsPerSecond,
             trackLength: file.trackLength,
             progressBar: analysisOpts,

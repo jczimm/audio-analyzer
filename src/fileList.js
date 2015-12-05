@@ -1,11 +1,18 @@
 /* global $trackList */
-/* jshint esnext: true */
 
 const path = require('path');
 
 import util from './util';
 
 //
+
+function fileHasAlreadyBeenAdded(fileHash) {
+    return Array.includes($.map(this.files, file => file.fileHash === fileHash), true);
+}
+const fileHasAlreadyBeenAddedErrMsg = (filePath) => `${filePath}: File is already in the track list`;
+
+//
+
 export default class FileList {
 
     constructor({ trackListTable }) {
@@ -13,10 +20,11 @@ export default class FileList {
 		this.files = {};
     }
 
-    addFile(filePath, { $entry, trackLength }) {
+    addFile(filePath, { $entry, trackLength, fileHash }) {
 		this.files[filePath] = {
 			entry: $entry,
 			trackLength,
+			fileHash,
 			completed: false,
 		};
     }
@@ -28,8 +36,20 @@ export default class FileList {
 		let trackLength;
 
 		return new Promise((resolve, reject) => {
-			util.getLengthOfAudioFile(filePath)
-				.then((trackLengthSeconds) => {
+			Promise.all([util.getLengthOfAudioFile(filePath), util.hashFile(filePath)])
+				.then(([trackLengthSeconds, fileHash]) => {
+					// reject files that are already in fileList (those that have already been successfully added)
+					if (this::fileHasAlreadyBeenAdded(fileHash)) {
+						const errMsg = fileHasAlreadyBeenAddedErrMsg(filePath);
+						reject({
+							err: new Error('File has already been added'),
+							msg: errMsg,
+							loc: 'FileList.displayFile',
+							notify: true,
+						});
+						return;
+					}
+
 					const _trackLengthPretty = util.convertSecondsToHHMMSS(trackLengthSeconds);
 
 					// <tr>
@@ -53,7 +73,7 @@ export default class FileList {
 					$row.find('input[type=checkbox]').click();
 
 					trackLength = trackLengthSeconds;
-					this.addFile(filePath, { $entry: util.withRefs($row), trackLength });
+					this.addFile(filePath, { $entry: util.withRefs($row), trackLength, fileHash });
 
 					resolve(filePath);
 				})

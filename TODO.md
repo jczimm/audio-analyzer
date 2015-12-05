@@ -2,7 +2,8 @@
 Core:
   ✔ fix audio analysis loop! @important @done (15-11-30 00:17)
 
-  ☐ create crypto digests of files imported to prevent files from being imported twice
+  ✔ create crypto digests of files imported @done (15-12-03 20:44)
+  ☐ use files' crypto digests to prevent files from being imported twice
   ☐ use files' crypto digests as ids in fileList.files and for tagging loops (in loopsController.loops)
 
   ☐ implement "fast mode"; instead of reading freq data in measures according to the sample rate, read freq data live at set intervals from the audio file, playing back at a given speed
@@ -49,7 +50,7 @@ UI:
 
     General: 
      ☐ Implement electron-drag for title bar (replacing -webkit-app-region) (https://github.com/kapetan/electron-drag)
-     ☐ Display a loading icon when files are being prepared to be displayed in the list (make the state in loadingStates.js)
+     ☐ Display a loading icon when files are being prepared to be displayed in the list (make the state in loadingStates.js) @flagged
      ✔ display "drop more tracks here" banner at bottom of .interface:not(.blank):not(.working) @done (15-11-21 23:29)
      ✔ format Analysis Files Destination label @done (15-11-21 23:29)
 
