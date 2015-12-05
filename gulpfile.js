@@ -3,7 +3,6 @@ console.log("Running " + __filename + "...");
 var gulp = require('gulp-param')(require('gulp'), process.argv);
 
 var sourcemaps = require('gulp-sourcemaps'),
-    gutil = require('gulp-util'),
     debug = require('gulp-debug'),
     rucksack = require('gulp-rucksack'),
     autoprefixer = require('gulp-autoprefixer'),
@@ -11,8 +10,7 @@ var sourcemaps = require('gulp-sourcemaps'),
     babel = require('gulp-babel'),
     eslint = require('gulp-eslint'),
     changed = require('gulp-changed'),
-    gulpif = require('gulp-if'),
-    exclude = require('gulp-ignore').exclude();
+    gulpif = require('gulp-if');
 
 var util = require('./util');
 
