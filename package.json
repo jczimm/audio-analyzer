@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/jczimm/audio-analyzer",
   "dependencies": {
-    "afa-file": "^1.0.4",
+    "afa-file": "^1.0.5",
     "fs-extra": "^0.26.2",
     "jquery": "^2.1.4",
     "loop": "^2.1.2",
