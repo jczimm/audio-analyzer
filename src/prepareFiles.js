@@ -19,7 +19,7 @@ import util from './util';
 // }
 
 
-export default function prepareFile(filePaths) {
+export default function prepareFiles(filePaths) {
     return new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
         // copy files to tmp
         util.tmp.copyFilesToTmp(filePaths)
