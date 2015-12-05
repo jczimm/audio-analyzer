@@ -1,6 +1,7 @@
 
 const path = require('path');
 const fs = require('fs-extra');
+const crypto = require('crypto');
 
 import notifications from './notifications';
 
@@ -64,6 +65,44 @@ util.copyFile = function copyFile(sourcePath, destDir) {
 
 		readStream.pipe(writeStream);
 	});
+};
+
+// PROMISE UTILITIES
+
+util.Promise = {
+	// like Promise.all, except always resolves, after every promise resolves or rejects
+	// (this is unlike Promise.all, which resolves after all resolve or rejects when the first rejects)
+	// resolves an array `[results, errors]`, where `results` is an array of the results
+	// of the promises that fulfilled and `errors` is an array of the reasons of the promises
+	// that rejected (the indexes of the values in both `results` and `errors` correspond to
+	// the indexes in `arrPromises` of the promises from which the results and errors derive)
+	when(arrPromises) {
+		const numPromises = arrPromises.length;
+
+		const resolves = new Array(numPromises);
+		const rejects = new Array(numPromises);
+
+		let promise, numPromisesDone = 0;
+		return new Promise((resolve) => {
+			const resolveResults = () => {
+				resolve([resolves, rejects]);
+			};
+			for (let i = 0; i < numPromises; i++) {
+				promise = arrPromises[i];
+				promise.then((result) => {
+					resolves[i] = result;
+					numPromisesDone++;
+
+					if (numPromisesDone >= numPromises) resolveResults();
+				}).catch((err) => {
+					rejects[i] = err;
+					numPromisesDone++;
+
+					if (numPromisesDone >= numPromises) resolveResults();
+				});
+			}
+		});
+	},
 };
 
 // util.cloneFunc = function cloneFunc(func) {
@@ -139,26 +178,51 @@ util.withRefs = function withRefs($el) {
 
 // TEMPORARY FILES DIRECTORY
 
-util.tmp = {};
+util.tmp = {
+	path: path.resolve(__dirname, './tmp'),
 
-util.tmp.path = path.resolve(__dirname, './tmp');
-
-util.tmp.createDir = function createDir() {
-	if (!fs.existsSync(util.tmp.path)) {
-		fs.mkdirSync(util.tmp.path);
-	}
+	createDir() {
+		const tmpPath = this.path;
+		if (!fs.existsSync(tmpPath)) {
+			fs.mkdirSync(tmpPath);
+		}
+	},
+	copyFileToTmp(filePath) {
+		return util.copyFile(filePath, this.path);
+	},
+	copyFilesToTmp(filePaths) {
+		return Promise.all(filePaths.map(this::this.copyFileToTmp));
+	},
+	cleanUp() {
+		fs.removeSync(this.path);
+	},
 };
 
-util.tmp.copyFileToTmp = function copyFileToTmp(filePath) {
-	return util.copyFile(filePath, util.tmp.path);
-};
+// CRYPTO UTILITIES
 
-util.tmp.copyFilesToTmp = function copyFilesToTmp(filePaths) {
-	return Promise.all(filePaths.map(util.tmp.copyFileToTmp));
-};
+util.hashFile = function hashFile(filePath) {
+	return new Promise((resolve, reject) => {
+		const hash = crypto.createHash('md5');
+		const stream = fs.createReadStream(path.resolve(__dirname, filePath));
 
-util.tmp.cleanUp = function cleanUp() {
-	fs.removeSync(util.tmp.path);
+		stream.on('data', (data) => {
+			hash.update(data, 'binary');
+		});
+
+		stream.on('error', (err) => {
+			const errorInfo = {
+				err: err,
+				msg: `Error hashing file ${filePath}`,
+				loc: 'util.hashFile',
+				notify: true,
+			};
+			reject(errorInfo);
+		});
+
+		stream.on('end', () => {
+			resolve(hash.digest('hex'));
+		});
+	});
 };
 
 // AUDIO UTILIES
@@ -241,7 +305,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 		content = msg;
 	} else {
 		method = 'error';
-		prefix = 'ERR';
+		prefix = 'ERR ';
 		content = err;
 	}
 	// e.g. `ERR @ erreeFunction(argPassed1, argPassed2): ${err}`
@@ -251,7 +315,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 	console[method](...errorMsg);
 
 	if (notify === true) {
-		notifications.err(msg);
+		notifications.err({ msg });
 	}
 };
 

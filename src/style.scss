@@ -6,6 +6,7 @@ $grey-accent: #bbb;
 $grey-accent2: #aaa;
 
 $theme-color: rgb(63,81,181);
+$theme-color-fl: #304FFE; // "accent-fluorescent" (Indigo A700 https://www.google.com/design/spec/style/color.html#color-color-palette)
 $accent: rgb(255,110,64);
 
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic|Roboto+Mono);
@@ -261,4 +262,19 @@ input#upload {
 
 .snackbar.error {
     background-color: $red;
+}
+
+.snackbar button.actionbutton {
+    color: white;
+    font-weight: 700;
+    
+    margin-left: 1em;
+    
+    &:hover, &:active {
+        background-color: transparent;
+    }
+    
+    &.active {
+        color: $offwhite;
+    }
 }

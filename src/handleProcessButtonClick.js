@@ -65,7 +65,16 @@ export default function handleProcessButtonClick() {
         if (path !== undefined && path.length > 0) {
             startFiles(fileList.files);
         } else {
-            notifications.err('Error: No destination directory was provided. [Try Again]'); // TODO: make [Try Again] a text button (material toast "action")
+            notifications.err({
+                msg: 'Error: No destination directory was provided.',
+                action: {
+                    text: 'Try Again',
+                    click() {
+                        handleProcessButtonClick();
+                        return;
+                    },
+                },
+            });
         }
     } else {
         startFiles(fileList.files);
