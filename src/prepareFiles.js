@@ -21,12 +21,14 @@ import util from './util';
 
 export default function prepareFile(filePaths) {
     return new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
-        util.tmp.copyFilesToTmp(filePaths) //
+        // copy files to tmp
+        util.tmp.copyFilesToTmp(filePaths)
             .then((tmpFilePaths) => {
-                Promise.all(tmpFilePaths.map(::fileList.displayFile)) // eslint-disable-line
-                    .then((displayedFilePaths) => {
-                        resolve(displayedFilePaths); //
-                    }).catch(util.handleErr);
-            }).catch(util.handleErr);
+                // display the files in the file list
+                util.Promise.when(tmpFilePaths.map(::fileList.displayFile)) // eslint-disable-line
+                    .then(resolve);
+            }).catch((err) => {
+                reject(err);
+            });
     });
 }
