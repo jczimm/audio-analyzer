@@ -54,6 +54,9 @@ UI:
      ✔ display "drop more tracks here" banner at bottom of .interface:not(.blank):not(.working) @done (15-11-21 23:29)
      ✔ format Analysis Files Destination label @done (15-11-21 23:29)
 
+     ☐ adhere interface writing to rules at https://www.google.com/design/spec/style/writing.html and look at https://signalvnoise.com/posts/3633-on-writing-interfaces-well
+       - keep in mind over the course of the development of the program (make a Writing-Style.md with a version of these rules for contributors to follow?)
+
 Distribution:
   ✔ fix packaging (in dist/win/Audio Analyzer for MAV-win32-ia32/, `electron` and .exe do not run app) @done (15-10-02 21:12)
   ☐ create a better icon (+ then remove attribution in CREDITS.md)
