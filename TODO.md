@@ -33,7 +33,7 @@ Code Quality:
     ✔ organize globals (maybe use a global.js or commons.js?) @done (15-12-03 00:39)
 
   Style:
-    ☐ configure ESLint, use eslint-config-airbnb (see https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb)
+    ✔ configure ESLint, use eslint-config-airbnb (see https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb) @done (15-12-06 18:55)
 
     ☐ apply rscss style guide to html and scss files (see http://rscss.io)
       - edit index.html
