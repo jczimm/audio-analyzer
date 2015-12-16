@@ -26,19 +26,26 @@ export default class LoopsController {
 
 		console.info('creating interval %s', intervalId);
 
-		this.intervals[intervalId] = setInterval(fn, interval);
+		this.intervals[intervalId] = setInterval(() => {
+			// execute `fn`, if it returns 'break' then break the loop
+			if (fn() === 'break') this.clearLoop(intervalId);
+		}, interval);
 	}
 
 	clearLoop(loopId) {
-		// delete it from the loops obj (is time saved by deleting > time spent deleting?)
-		console.info('deleting loop %s', loopId);
-		delete this.loops[loopId];
+		try {
+			// delete it from the loops obj (is time saved by deleting > time spent deleting?)
+			delete this.loops[loopId];
+			console.info('deleted loop %s', loopId);
+		} catch (e) {}
 	}
 
 	clearInterval(intervalId) {
-		console.info('clearing interval %s', intervalId);
-		clearInterval(this.intervals[intervalId]);
-		delete this.intervals[intervalId];
+		try {
+			clearInterval(this.intervals[intervalId]);
+			delete this.intervals[intervalId];
+			console.info('cleared interval %s', intervalId);
+		} catch (e) {}
 	}
 
 	clearLoops(loopIds = []) {

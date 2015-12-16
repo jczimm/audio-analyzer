@@ -5,7 +5,7 @@ const path = require('path');
 import util from './util';
 import loadingStates from './loadingStates';
 
-import analyzeAudioTrack from './core';
+import AudioAnalyzer from './AudioAnalyzer';
 
 function progressOpts({ onOneTrackDone, file, $progressBar, progressBar, $entry }) {
     return {
@@ -78,9 +78,11 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
     // set configuration variables to the values of the options' corresponding inputs in the interface
 
     const filePaths = Object.keys(files);
-    let gzip, pointsPerSecond,
+    let mode, gzip, pointsPerSecond,
         tmpFilePath, file,
         $entry, progressBar, $progressBar;
+
+    const audioAnalyzer = new AudioAnalyzer();
 
     for (let i = 0; i < filePaths.length; i++) {
         // if analysis is currently stopping or has been stopped (interface now in idle state),
@@ -88,7 +90,8 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
             return; // then exit
         }
 
-        // get options
+        // read options
+        mode = $('input#mode').is(':checked') ? 'fast' : 'normal';
         gzip = $('input#gzip').is(':checked');
         pointsPerSecond = parseInt($pointsPerSecond.val(), 10);
 
@@ -121,8 +124,9 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
         // exec. numProcessed++ so that when any track completes, the next available audio context will not be used to process this one
         beforeEachTrack();
 
-        analyzeAudioTrack(tmpFilePath, {
+        audioAnalyzer.analyzeAudioTrack(tmpFilePath, {
             fileHash: file.fileHash,
+            mode,
             pointsPerSecond,
             trackLength: file.trackLength,
             progressBar: analysisOpts,
@@ -136,6 +140,7 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
                     .then(() => {
                         console.log('successfully saved .afa file for %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(tmpFilePath));
                     }).catch((err) => {
+                        if (!err.loc) err.loc = 'FileWriter#saveDatatoFile';
                         util.handleError(err);
                     });
             })

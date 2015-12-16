@@ -6,7 +6,7 @@ Core:
   ✔ use files' crypto digests to prevent files from being imported twice @done (15-12-04 23:27)
   ✔ use files' crypto digests as ids in fileList.files and for tagging loops (in loopsController.loops) @done (15-12-04 23:27)
 
-  ☐ implement "fast mode"; instead of reading freq data in measures according to the sample rate, read freq data live at set intervals from the audio file, playing back at a given speed
+  ✔ implement "fast mode"; instead of reading freq data in measures according to the sample rate, read freq data live at set intervals from the audio file, playing back at a given speed @done (15-12-16 19:20)
     - if sample rate <= 1000 Hz, then analysis interval = (1000 / sample rate) ms, playback speed = 1
     - else (if sample rate > 1000 hz), then analysis interval = 1 ms, playback speed = (1000 / sample rate)
 
