@@ -1,5 +1,7 @@
 console.log("Running " + __filename + "...");
 
+var path = require('path');
+
 var gulp = require('gulp-param')(require('gulp'), process.argv);
 
 var sourcemaps = require('gulp-sourcemaps'),
@@ -33,7 +35,7 @@ gulp.task('_serve', ['build'], function () {
 gulp.task('serve', function () {
     // live-reloading application for development
     electron = require('electron-connect').server.create({
-        path: './app/app.js'
+        path: path.resolve(__dirname, './app/app.js')
     });
     
     // Start browser process
