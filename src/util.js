@@ -298,6 +298,11 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 	//		fine: false // if true, the "error" should not be displayed as such; rather, it should be displayed as a mere notification
 	// }
 
+	if (!arguments[0].err) {
+		console.error(arguments[0]);
+		return;
+	}
+
 	let method, prefix, content;
 	if (fine === true) {
 		method = 'info';
