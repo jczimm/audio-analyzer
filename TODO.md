@@ -20,6 +20,7 @@ Core:
 Code Quality:
 
   ☐ use DocBlockr to generate simple documentation for [functions in] .js files
+  ☐ convert .js files to typescript (don't forget to use `interface`, seems useful for the code)
 
   Refactoring:
     ✔ standardize options-object paradigm across all functions @done (15-11-23 19:01)
