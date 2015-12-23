@@ -18,9 +18,9 @@ const stateNames = Object.keys(states);
 
 import handleProcessButtonClick from './handleProcessButtonClick';
 function bindButtonsToHandlers() {
-	this.$processButton.click(handleProcessButtonClick);
+	this.buttons.$processButton.click(handleProcessButtonClick);
 
-	this.$stopButton.click(() => {
+	this.buttons.$stopButton.click(() => {
 		interfaceStateController.state = 'stopping';
 	});
 }
@@ -29,9 +29,9 @@ function bindButtonsToHandlers() {
 
 export default class ActionButton {
 
-	constructor({ $processButton, $stopButton }) {
-		this.$processButton = $processButton;
-		this.$stopButton = $stopButton;
+	constructor(buttons = { $processButton: null, $stopButton: null, $loadingButton: null }) {
+        this.buttons = buttons;
+        this.buttonKeys = Object.keys(buttons);
 
 		this::bindButtonsToHandlers(); // eslint-disable-line
 
@@ -39,19 +39,13 @@ export default class ActionButton {
 	}
 
 	switchTo(name) {
-		switch (name) {
-			case 'processButton':
-				this.$processButton.show();
-				this.$stopButton.hide();
-				break;
+        // hide all buttons
+		for (let i = 0; i < this.buttonKeys.length; i++) {
+            this.buttons[this.buttonKeys[i]].hide();
+        }
 
-			case 'stopButton':
-				this.$stopButton.show();
-				this.$processButton.hide();
-				break;
-
-			default: break;
-		}
+        // show the button specified by `name`
+        this.buttons[`$${name}`].show();
 	}
 
 	// returns boolean: whether to display the button
