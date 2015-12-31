@@ -16,6 +16,18 @@ Core:
     ☐ for gzipping, after an .afa file is written, statically [read,] compress, and replace it with an .afa.gz file
 
   ☐ implement stereo audio analysis, "stereo mode" enabled by default (look at web-audio-analyser docs/readme for impl. through it)
+
+  ☐ use a symbol for each track to tag its analysis loop/interval and progress interval; store the symbols as properties of the files in the file list @idea
+
+  ☐ compile some "pure" parts of util methods into .wasm files for speed? @idea
+    ('pure' as in: 'manipulating 0-dimensional primitives', i.e. non-array-non-objects)
+    e.g: restructure `util.normalize` so that it maps the values in the input array
+         to the results of a function taking
+           `val, min, rangeChange, from`
+         and returning
+           `(((val - min) * rangeChange) || 0) + from`
+         (see util/index.js...)
+    > determine potential speed improvement first?
   
 Code Quality:
 
@@ -61,16 +73,15 @@ UI:
 Distribution:
   ✔ fix packaging (in dist/win/Audio Analyzer for MAV-win32-ia32/, `electron` and .exe do not run app) @done (15-10-02 21:12)
   ☐ create a better icon (+ then remove attribution in CREDITS.md)
-
-Development:
-  -
-
-Distribution:
   ☐ disable development shortcuts (e.g. CTRL+R, CTRL+SHIFT+I) in app in a non-development environment
 
+Development:
+  ☐ create a static/ folder at root and have gulp copy the lib/, test.wav, and other static  files from there (when dirty) to the app/ folder
+    (and have gulp clear app/ in build)
 
 Before Open-Sourcing:
   ☐ test development experience (cloning, installing deps (incl dev deps), and using the npm scripts)
+  ☐ download icon font files and Roboto font files into assets/ and reference them from there (all resources must be offline for the application to be offline-compatible)
   ☐ provide a release to the repo (an installer + the packaged application (the folder with the .exe, .dll's, folders etc.))
   ☐ add a decent CONTRIBUTING.md (link from README.md)
   ☐ create a demo gif to demo the UI and usage process (what the user does) (embed in README.md)
