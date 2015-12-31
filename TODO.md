@@ -88,5 +88,6 @@ Before Open-Sourcing:
 
 After Open-Sourcing:
   ☐ configure/start travis automated builds (testing), already have .travis.yml
+  ☐ configure/enable greenkeeper automated dependency management (greenkeeper.io)
 
 ```
