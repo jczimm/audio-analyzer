@@ -1,9 +1,8 @@
-/* global $pointsPerSecond, fileWriter, interfaceStateController */
+/* global globals */
 
 const path = require('path');
 
 import util from './util';
-import loadingStates from './loadingStates';
 
 import AudioAnalyzer from './AudioAnalyzer';
 
@@ -74,26 +73,26 @@ function progressOpts({ onOneTrackDone, file, $progressBar, progressBar, $entry 
     };
 }
 
+// process files in parallel
 export default function processFiles(files, { beforeEachTrack, onOneTrackDone }) {
     // set configuration variables to the values of the options' corresponding inputs in the interface
+    const audioAnalyzer = new AudioAnalyzer();
 
     const filePaths = Object.keys(files);
     let mode, gzip, pointsPerSecond,
         tmpFilePath, file,
         $entry, progressBar, $progressBar;
 
-    const audioAnalyzer = new AudioAnalyzer();
-
     for (let i = 0; i < filePaths.length; i++) {
         // if analysis is currently stopping or has been stopped (interface now in idle state),
-        if (interfaceStateController.isState('stopping') || interfaceStateController.isState('idle')) {
+        if (globals.interfaceStateController.isState('stopping') || globals.interfaceStateController.isState('idle')) {
             return; // then exit
         }
 
         // read options
         mode = $('input#mode').is(':checked') ? 'fast' : 'normal';
         gzip = $('input#gzip').is(':checked');
-        pointsPerSecond = parseInt($pointsPerSecond.val(), 10);
+        pointsPerSecond = parseInt(globals.$pointsPerSecond.val(), 10);
 
         tmpFilePath = filePaths[i];
         file = files[tmpFilePath];
@@ -109,7 +108,7 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
 
         // PROGRESS BAR
 
-        progressBar = loadingStates.createProgressBar( /* "indeterminate" */);
+        progressBar = util.loadingStates.createProgressBar( /* "indeterminate" */);
         $progressBar = $(progressBar.element_);
 
         $entry.append($progressBar);
@@ -132,7 +131,7 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
             progressBar: analysisOpts,
         })
             .then((results) => {
-                fileWriter.saveDataToFile(results.analysis, {
+                globals.fileWriter.saveDataToFile(results.analysis, {
                     sourcePath: results.sourcePath,
                     gzip,
                     progressBar: saveOpts,

@@ -1,45 +1,35 @@
-/* global trackListTable, interfaceStateController, destPicker, $fileInput  */
+/* global globals */
 
 import registerGlobals from './globals';
-registerGlobals(window);
-
+registerGlobals(globals);
 //
 
-import InterfaceStateController from './interfaceStateController';
-window.interfaceStateController = new InterfaceStateController();
-interfaceStateController.state = 'blank'; // to bind blank state handlers
+import InterfaceStateController from './InterfaceStateController';
+globals.interfaceStateController = new InterfaceStateController();
+globals.interfaceStateController.state = 'blank'; // to bind blank state handlers
 
 import LoopsController from './LoopsController';
-window.loopsController = new LoopsController();
+globals.loopsController = new LoopsController();
 
 //
 
 import ActionButton from './ActionButton';
-window.actionButton = new ActionButton({
+globals.actionButton = new ActionButton({
     $processButton: $('#process-button'),
     $stopButton: $('#stop-button'),
+    $loadingButton: $('#loading-button'),
 });
 
 import FileList from './FileList';
-window.fileList = new FileList({ trackListTable });
+globals.fileList = new FileList({ trackListTable: globals.trackListTable });
 
 import OptionsMenu from './OptionsMenu';
-window.optionsMenu = new OptionsMenu();
-window.optionsMenu.bindHandlers();
+globals.optionsMenu = new OptionsMenu();
+globals.optionsMenu.bindHandlers();
 
 import FilePickerDialog from './FilePickerDialog';
-window.destPicker = new FilePickerDialog();
+globals.destPicker = new FilePickerDialog();
 
 import FileWriter from './FileWriter';
-window.fileWriter = new FileWriter();
+globals.fileWriter = new FileWriter();
 
-//
-
-const ipc = require('electron').ipcRenderer;
-$('#exit-button').click(() => {
-    ipc.sendSync('window', 'close');
-});
-
-import util from './util';
-$('#interface #track-list').click(util.stopPropagation);
-$('.mdl-menu.main, .mdl-menu.main *').click(util.stopPropagation);

@@ -1,7 +1,7 @@
 
-require('./lib/snackbar/snackbar.min');
+require('../lib/snackbar/snackbar.min');
 
-import util from './util';
+import util from './index';
 
 //
 
@@ -56,7 +56,7 @@ class Notification {						// action: { text: '', click() {} }
 }
 
 class ErrorNotification extends Notification {
-	constructor({ content, timeout, action }) {
+	constructor({ content, timeout = 6000, action }) {
 		super({ style: 'error', content, timeout, action });
 	}
 }

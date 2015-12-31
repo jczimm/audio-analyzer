@@ -1,4 +1,4 @@
-/* global destPicker, $, $fileInput, $pointsPerSecond, $pointsPerSecondCounter, $destLabel, $innerDestLabel */
+/* global globals */
 
 import handleFiles from './handleFiles';
 function handleFileInputChange() {
@@ -15,13 +15,13 @@ function handlePointsPerSecondRangeChange(e) {
         $(this).val(100); // set the position to 100,
         handlePointsPerSecondRangeChange(); // and call handler again to display it
     } else {
-        $pointsPerSecondCounter.text(val);
+        globals.$pointsPerSecondCounter.text(val);
     }
 }
 
 const destLabelHover = function destLabelHover() {
-    const textWidth = $innerDestLabel.width();
-    const labelWidth = $destLabel.parent().width() - 32; // width of li minus 2em on left (where button is)
+    const textWidth = globals.$innerDestLabel.width();
+    const labelWidth = globals.$destLabel.parent().width() - 32; // width of li minus 2em on left (where button is)
 
     if (textWidth > labelWidth) { // if not the full width of the text in `$destLabel` is shown (= if there is hidden text),
         const rightPos = textWidth - labelWidth;
@@ -30,14 +30,14 @@ const destLabelHover = function destLabelHover() {
         // then return handlers for mousein and mouseout events on `$destLabel`
         return [
             function mouseIn() {
-                $innerDestLabel.animate({
+                globals.$innerDestLabel.animate({
                     right: `${rightPos}px`,
                 }, time, 'linear', function onAnimationFinish() {
                     $(this).stop();
                 });
             },
             function mouseOut() {
-                $innerDestLabel.stop().animate({
+                globals.$innerDestLabel.stop().animate({
                     right: '0',
                 }, 400, 'linear');
             },
@@ -55,8 +55,8 @@ export default class OptionsMenu {
     }
 
     bindHandlers() {
-        $fileInput.change(handleFileInputChange);
-        $pointsPerSecond.on('change input', handlePointsPerSecondRangeChange.bind($pointsPerSecond));
+        globals.$fileInput.change(handleFileInputChange);
+        globals.$pointsPerSecond.on('change input', handlePointsPerSecondRangeChange.bind(globals.$pointsPerSecond));
 
         $('#chooseDestButton').click(() => {
             this.promptDestPicker();
@@ -68,18 +68,18 @@ export default class OptionsMenu {
     }
 
     init() {
-        handlePointsPerSecondRangeChange.apply($pointsPerSecond);
+        handlePointsPerSecondRangeChange.apply(globals.$pointsPerSecond);
     }
 
     promptDestPicker() {
-        const path = destPicker.pick()[0];
+        const path = globals.destPicker.pick()[0];
 
         if (path) {
-            $innerDestLabel.text(path);
-            $destLabel.parent().addClass('filled');
+            globals.$innerDestLabel.text(path);
+            globals.$destLabel.parent().addClass('filled');
             $('#chooseDestButton').removeClass('mdl-button--raised');
 
-            $destLabel
+            globals.$destLabel
                 .off('mouseenter mouseleave') // remove hover handlers (only bound if this `promptDestPicker` called before)
                 .hover(...destLabelHover()); // and reapply them
         }

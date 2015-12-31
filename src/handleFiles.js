@@ -1,9 +1,8 @@
-/* global interfaceStateController, fileList, $interface, $fileInput */
+/* global globals */
 
 const path = require('path');
 
 import util from './util';
-import notifications from './notifications';
 
 import prepareFiles from './prepareFiles.js';
 
@@ -15,22 +14,24 @@ const invalidFileFormatErrMsg = (filePath) => `${filePath}: Invalid file format 
 export default function handleFiles(files) {
     const filePaths = [];
 
-    // fill filePaths
+    // fill filePaths selectively
     let filePath, file; // `file` is of type File
     for (let i = 0; i < files.length; i++) {
         file = files.item(i);
         filePath = file.name;
-        // reject file if invalid file type
+        // ignore file if invalid file type
         if (!isValidFileType(filePath)) {
-            console.error('ERR: ' + invalidFileFormatErrMsg(filePath));
-            notifications.err({ msg: invalidFileFormatErrMsg(filePath) });
-            return;
-        }
-
-        filePaths.push(file.path);
+            const errMsg = invalidFileFormatErrMsg(filePath);
+            util.handleError({
+                err: new Error(errMsg),
+                msg: errMsg,
+                loc: 'handleFiles',
+                notify: true,
+            });
+        } else filePaths.push(file.path);
     }
 
-    util.resetInput($fileInput);
+    util.resetInput(globals.$fileInput);
 
     if (filePaths[0]) {
         prepareFiles(filePaths)
@@ -43,7 +44,7 @@ export default function handleFiles(files) {
                     return;
                 }
                 // update the interface to idle state
-                interfaceStateController.state = 'idle';
+                globals.interfaceStateController.state = 'idle';
             })
             // `prepareFiles` rejects if from `util.copyFilesToTmp`
             .catch((err) => {

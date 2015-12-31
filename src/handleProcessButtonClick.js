@@ -1,4 +1,4 @@
-/* global destPicker, fileList, optionsMenu, interfaceStateController */
+/* global globals */
 
 // TODO: clean up this file; make it more straightforward and more structurally terse
 
@@ -9,7 +9,6 @@ import notifications from './notifications';
 
 
 import processFiles from './processFiles';
-
 
 const maxConcurrentCtxs = 1;
 
@@ -40,30 +39,56 @@ function process(files) {
             processFiles(nextFile, { beforeEachTrack, onOneTrackDone });
         } else {
             // if there is no next track in the list, consider the process finished
-            interfaceStateController.state = 'idle';
+            globals.interfaceStateController.state = 'idle';
         }
     };
 
     // if analysis is currently stopping or has been stopped (interface now in idle state),
-    if (interfaceStateController.isState('stopping') || interfaceStateController.isState('idle')) {
+    if (globals.interfaceStateController.isState('stopping') || globals.interfaceStateController.isState('idle')) {
         return; // then exit
     }
 
     processFiles(firstFiles, { beforeEachTrack, onOneTrackDone });
 }
 
-function startFiles(files) {
-    interfaceStateController.state = 'working';
+const maxTimesErred = 5;
+function start(files) {
+    let numErred = 0;
 
-    process(files);
+    const tryTestAnalysis = () => {
+        console.log('%ctesting audio...', 'font-weight: 600; color: blue;');
+        util.testAudio.testAudioAnalysis().then((r) => {
+            console.log(r);
+            console.log('%ctest successful.', 'font-weight: 600; font-size: 1.2em; color: blue;');
+            //
+            globals.interfaceStateController.state = 'working'; // go into working state (visually)
+
+            console.log('%cprocessing...', 'font-weight: 600; font-size: 1.2em; color: blue;');
+            process(files);
+            //
+        }).catch((errInfo) => {
+            //
+            if (numErred < maxTimesErred - 1) {
+                numErred++;
+                tryTestAnalysis();
+            } else {
+                console.log('%ctest failed.', 'font-weight: 600; font-size: 1.2em; color: red;');
+                globals.interfaceStateController.state = 'idle'; // [return to] idle state
+                util.handleError(errInfo);
+            }
+        });
+    };
+
+    globals.interfaceStateController.state = 'testing'; // show loading (waiting) button (icon)
+    tryTestAnalysis();
 }
 
 export default function handleProcessButtonClick() {
-    if (!destPicker.paths[0]) {
-        const path = optionsMenu.promptDestPicker();
+    if (!globals.destPicker.paths[0]) {
+        const path = globals.optionsMenu.promptDestPicker();
 
         if (path !== undefined && path.length > 0) {
-            startFiles(fileList.files);
+            start(globals.fileList.files);
         } else {
             notifications.err({
                 msg: 'Error: No destination directory was provided.',
@@ -77,6 +102,6 @@ export default function handleProcessButtonClick() {
             });
         }
     } else {
-        startFiles(fileList.files);
+        start(globals.fileList.files);
     }
 }

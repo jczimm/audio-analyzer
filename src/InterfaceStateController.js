@@ -1,4 +1,4 @@
-/* global $interface, $fileInput, actionButton, fileList, loopsController */
+/* global globals */
 
 import handleFiles from './handleFiles.js';
 
@@ -23,40 +23,43 @@ import handleFiles from './handleFiles.js';
 const states = {
 	blank() {
 		// currently, blank state is only set at init (it is the starting state)
-		// $interface.addClass('blank').removeClass('done working');
+		// globals.$interface.addClass('blank').removeClass('done working');
 		// ^  uncomment if we're somehow going to go back to blank state from another state
 	},
 	idle() {
 		// remove the classes corr to all possibles states from which the interface could now be changing
 		// > this animates in the '#process-button' FAB (via CSS)
-		$interface.removeClass('blank working');
+		globals.$interface.removeClass('blank working');
 
-		actionButton.updateForState('idle');
+		globals.actionButton.updateForState('idle');
 
 		// if all files are completed,
-		// TODO: wait unti file list is populated
+		// TODO: wait unti file list is populated (have loader before)
 
-		$interface.removeClass('done'); // re-setting below
-		if (!fileList.areTracksLeftForAnalysis()) {
+		globals.$interface.removeClass('done'); // re-setting below
+		if (!globals.fileList.areTracksLeftForAnalysis()) {
 			// add .done class
-			$interface.addClass('done');
+			globals.$interface.addClass('done');
 		}
 	},
+    testing() {
+        globals.actionButton.updateForState('testing');
+    },
 	working() {
 				// .done might not be present
-		$interface.removeClass('done').addClass('working');
+		globals.$interface.removeClass('done').addClass('working');
 
 		// tell actionButton we're working; switches to stop button
-		actionButton.updateForState('working');
+		globals.actionButton.updateForState('working');
 	},
 	stopping() {
 		// clear all loops through loopController
-		loopsController.clearAllLoops();
-		loopsController.clearAllIntervals();
+		globals.loopsController.clearAllLoops();
+		globals.loopsController.clearAllIntervals();
 
 		// remove all progress bars:
 
-		const files = fileList.files;
+		const files = globals.fileList.files;
 		const fileIds = Object.keys(files);
 		let $entry, $checkbox,
 			tmpFilePath;
@@ -111,7 +114,7 @@ function bindBodyHandlers() {
 const handlersForStates = {
 	blank() {
 		$('#interface, div#upload-button, #interface #blank-state-text').click(() => {
-			$fileInput.click();
+			globals.$fileInput.click();
 		});
 	},
 	idle() {
@@ -125,7 +128,7 @@ const handlersForStatesStatesNames = Object.keys(handlersForStates);
 function bindElementsForState(newState) {
 	if (Array.includes(handlersForStatesStatesNames, newState)) {
 		handlersForStates[newState]();
-	} // don't throw an error (since we don't have handlers to bind for entering all states)
+	} // (don't throw an error since we don't have handlers to bind for entering all states)
 }
 
 //

@@ -1,9 +1,8 @@
+/* global __appdirname */
 
 const path = require('path');
 const fs = require('fs-extra');
 const crypto = require('crypto');
-
-import notifications from './notifications';
 
 // GENERAL UTILITIES
 
@@ -51,14 +50,15 @@ util.copyFile = function copyFile(sourcePath, destDir) {
 		const writeStream = fs.createWriteStream(destPath);
 
 		writeStream.on('finish', () => {
-			resolve(path.relative(__dirname, destPath));
+			resolve(path.relative(__appdirname, destPath));
 		});
 
 		writeStream.on('error', (err) => {
 			reject({
 				err: err,
-				msg: `Error copying ${sourcePath} to ${destPath}`,
+				msg: `Error copying file`,
 				loc: 'util.copyFile',
+                args: [sourcePath, destDir],
 				notify: false,
 			});
 		});
@@ -178,32 +178,15 @@ util.withRefs = function withRefs($el) {
 
 // TEMPORARY FILES DIRECTORY
 
-util.tmp = {
-	path: path.resolve(__dirname, './tmp'),
-
-	createDir() {
-		const tmpPath = this.path;
-		if (!fs.existsSync(tmpPath)) {
-			fs.mkdirSync(tmpPath);
-		}
-	},
-	copyFileToTmp(filePath) {
-		return util.copyFile(filePath, this.path);
-	},
-	copyFilesToTmp(filePaths) {
-		return Promise.all(filePaths.map(this::this.copyFileToTmp));
-	},
-	cleanUp() {
-		fs.removeSync(this.path);
-	},
-};
+import tmp from './tmp';
+util.tmp = tmp;
 
 // CRYPTO UTILITIES
 
 util.hashFile = function hashFile(filePath) {
 	return new Promise((resolve, reject) => {
 		const hash = crypto.createHash('md5');
-		const stream = fs.createReadStream(path.resolve(__dirname, filePath));
+		const stream = fs.createReadStream(path.resolve(__appdirname, filePath));
 
 		stream.on('data', (data) => {
 			hash.update(data, 'binary');
@@ -237,12 +220,25 @@ util.getLengthOfAudioFile = function getLengthOfAudioFile(srcPath) {
 		});
 
 		audio.addEventListener('error', (e) => {
-			const errorInfo = util.handleAudioLoadError(e);
+			const errorInfo = this.handleAudioLoadError(e);
 			errorInfo.loc = 'util.getLengthOfAudioFile';
 			reject(errorInfo);
 		});
 	});
 };
+
+//
+
+import testAudio from './testAudio';
+util.testAudio = testAudio;
+//
+import notifications from './notifications';
+util.notifications = notifications;
+//
+import loadingStates from './loadingStates';
+util.loadingStates = loadingStates;
+//
+
 
 util.convertSecondsToHHMMSS = function convertSecondsToHHMMSS(seconds) {
 	const date = new Date(1970, 0, 1);
@@ -298,7 +294,9 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 	//		fine: false // if true, the "error" should not be displayed as such; rather, it should be displayed as a mere notification
 	// }
 
-	if (!arguments[0].err) {
+    // allow `null`, as caught (`reject`'d) errors may provide;
+    // this condition should only have the argument logged when it is an unhandled (non-`reject`'d) error
+	if (arguments[0].err === undefined) {
 		console.error(arguments[0]);
 		return;
 	}
@@ -311,7 +309,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 	} else {
 		method = 'error';
 		prefix = 'ERR ';
-		content = err;
+		content = err || msg;
 	}
 	// e.g. `ERR @ erreeFunction(argPassed1, argPassed2): ${err}`
 	const errorMsg = [(prefix + `@ ${loc}` + (typeof args === 'object' ? `(${args.join(', ') })` : '') + ':'), content];
@@ -320,7 +318,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 	console[method](...errorMsg);
 
 	if (notify === true) {
-		notifications.err({ msg });
+		this.notifications.err({ msg });
 	}
 };
 

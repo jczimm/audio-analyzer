@@ -1,13 +1,16 @@
-/* global $, fileList, interfaceStateController */
+/* global globals */
 
 // controls state of action button with jQuery (visibility is controlled by styling of `#interface`)
 
 const states = {
 	idle() {
-		if (fileList.areTracksLeftForAnalysis()) {
+		if (globals.fileList.areTracksLeftForAnalysis()) {
 			this.switchTo('processButton');
 		}
 	},
+    testing() {
+        this.switchTo('loadingButton');
+    },
 	working() {
 		this.switchTo('stopButton');
 	},
@@ -21,7 +24,7 @@ function bindButtonsToHandlers() {
 	this.buttons.$processButton.click(handleProcessButtonClick);
 
 	this.buttons.$stopButton.click(() => {
-		interfaceStateController.state = 'stopping';
+		globals.interfaceStateController.state = 'stopping';
 	});
 }
 

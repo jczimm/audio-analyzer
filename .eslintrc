@@ -14,7 +14,8 @@
 		"no-cond-assign": [2, "except-parens"]
 	},
 	"globals": {
-		"$": "false"
+		"$": "false",
+        "globals": false
 		// TODO
 	}
 }

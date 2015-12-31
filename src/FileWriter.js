@@ -1,3 +1,4 @@
+/* global __appdirname */
 /* global destPicker */
 
 const path = require('path');
@@ -21,7 +22,7 @@ export default class FileWriter {
             complete() { },
         },
     }) {
-        const destFolder = destPicker.paths[0];
+        const destFolder = globals.destPicker.paths[0];
 
         // resolve destination for file to the file in the dest folder picked
         let dest = path.resolve(destFolder, path.basename(sourcePath))
@@ -33,7 +34,7 @@ export default class FileWriter {
         const file = new AFAFile(analysis);
 
         return new Promise((resolve, reject) => {
-            if (dest === __dirname) {
+            if (dest === __appdirname) {
                 return reject({
                     msg: 'Destination directory not set!',
                     loc: 'saveDataToFile',

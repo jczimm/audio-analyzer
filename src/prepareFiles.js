@@ -1,4 +1,4 @@
-/* global fileList */
+/* global globals */
 
 import util from './util';
 
@@ -11,7 +11,7 @@ import util from './util';
 //         let tmpFilePaths = await util.tmp.copyFilesToTmp(filePaths);
 //
 //         // display files (automatically registers `filePath`'s and `entry`'s')
-//         return await * tmpFilePaths.map(::fileList.displayFile);
+//         return await * tmpFilePaths.map(::globals.fileList.displayFile);
 //
 //     } catch (err) {
 //         util.handleError(err);
@@ -25,7 +25,7 @@ export default function prepareFiles(filePaths) {
         util.tmp.copyFilesToTmp(filePaths)
             .then((tmpFilePaths) => {
                 // display the files in the file list
-                util.Promise.when(tmpFilePaths.map(::fileList.displayFile)) // eslint-disable-line
+                util.Promise.when(tmpFilePaths.map(::globals.fileList.displayFile)) // eslint-disable-line
                     .then(resolve);
             }).catch((err) => {
                 reject(err);

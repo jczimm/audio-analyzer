@@ -1,4 +1,4 @@
-/* global $trackList */
+/* global globals */
 
 const path = require('path');
 
@@ -67,7 +67,7 @@ export default class FileList {
 					const $checkbox = $('<td/>').addClass('label').append(this.trackListTable.createCheckbox_($row.get(0)));
 					$row.prepend($checkbox);
 
-					$row.appendTo($trackList.find('> tbody'));
+					$row.appendTo(globals.$trackList.find('> tbody'));
 
 					// hacky... use MDL api to check the checkbox?
 					$row.find('input[type=checkbox]').click();
@@ -83,6 +83,7 @@ export default class FileList {
 
 					// util.handleError(err);
 					reject(err);
+                    return {};
 				});
 		});
     }
