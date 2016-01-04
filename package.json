@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/jczimm/audio-analyzer",
   "dependencies": {
-    "afa-file": "^1.0.6",
+    "afa-file": "^1.0.7",
     "fs-extra": "^0.26.2",
     "jquery": "^2.1.4",
     "loop": "^2.1.2",
@@ -60,6 +60,7 @@
     "babel-eslint": "^4.1.6",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-stage-0": "^6.1.18",
+    "cz-conventional-changelog": "^1.1.5",
     "electron-builder": "^2.3.0",
     "electron-connect": "^0.3.3",
     "electron-packager": "^5.1.1",
@@ -78,7 +79,11 @@
     "gulp-rucksack": "^0.1.2",
     "gulp-sass": "^2.1.0",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-util": "^3.0.7",
-    "stripcolorcodes": "^0.1.0"
+    "gulp-util": "^3.0.7"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
