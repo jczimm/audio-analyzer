@@ -1,5 +1,7 @@
 # Audio Analyzer for MAV
 
+[![bitHound Code](https://www.bithound.io/projects/badges/df793470-b26d-11e5-9547-3de35bd1f61d/code.svg)](https://www.bithound.io/github/jczimm/audio-analyzer)
+
 Desktop application that analyzes frequency data of individual audio tracks to generate corresponding analysis files (see [.afa file format](https://github.com/jczimm/afa-file)).  For Windows, OSX, and Linux.
 
 > TODO: test for OSX and Linux (multiple versions)
