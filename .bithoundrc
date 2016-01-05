@@ -1,7 +1,7 @@
 {
     "ignore": [
         "typings/**",
-        "**/.asm.js",
+        "**/*.asm.js",
         "gulpfile.js",
         "app.js",
         "util/**",
