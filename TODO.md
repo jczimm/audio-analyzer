@@ -10,7 +10,8 @@ Core:
     - if sample rate <= 1000 Hz, then analysis interval = (1000 / sample rate) ms, playback speed = 1
     - else (if sample rate > 1000 hz), then analysis interval = 1 ms, playback speed = (1000 / sample rate)
 
-  ☐ use a test .wav file to test whether or not computer audio output is working correctly (play it and analyze time domain data; if array is [0..], don't proceed with analysis processes (make a toast notification... maybe with longer timeout?)) 
+  ☐ use a test .wav file to test whether or not computer audio output is working correctly (play it and analyze time domain data; if array is [0..], don't proceed with analysis processes (make a toast notification... maybe with longer timeout?)) @flagged
+    **FIXME ^ (currently disabled)
 
   ☐ write .afa files with write-streams (don't cache the great amount of analysis data in memory before writing the files statically at the end!)
     ☐ for gzipping, after an .afa file is written, statically [read,] compress, and replace it with an .afa.gz file
@@ -66,6 +67,7 @@ UI:
      ☐ Display a loading icon when files are being prepared to be displayed in the list (make the state in loadingStates.js) @flagged
      ✔ display "drop more tracks here" banner at bottom of .interface:not(.blank):not(.working) @done (15-11-21 23:29)
      ✔ format Analysis Files Destination label @done (15-11-21 23:29)
+     ☐ make testing phase into a styled-state; use class .testing on #interface, change the action button to the X, but bind it to stopping the testing phase; when #interface has class .testing, have the css display a loader somewhere on the interface
 
      ☐ adhere interface writing to rules at https://www.google.com/design/spec/style/writing.html and look at https://signalvnoise.com/posts/3633-on-writing-interfaces-well
        - keep in mind over the course of the development of the program (make a Writing-Style.md with a version of these rules for contributors to follow?)
@@ -75,8 +77,11 @@ Distribution:
   ☐ create a better icon (+ then remove attribution in CREDITS.md)
   ☐ disable development shortcuts (e.g. CTRL+R, CTRL+SHIFT+I) in app in a non-development environment
 
+Dependencies:
+  ☐ update 'electron-prebuilt'
+
 Development:
-  ☐ create a static/ folder at root and have gulp copy the lib/, test.wav, and other static  files from there (when dirty) to the app/ folder
+  ☐ create a static/ folder at root and have gulp copy the lib/, test.wav, and other static files from there (when dirty) to the app/ folder
     (and have gulp clear app/ in build)
 
 Before Open-Sourcing:
@@ -85,9 +90,9 @@ Before Open-Sourcing:
   ☐ provide a release to the repo (an installer + the packaged application (the folder with the .exe, .dll's, folders etc.))
   ☐ add a decent CONTRIBUTING.md (link from README.md)
   ☐ create a demo gif to demo the UI and usage process (what the user does) (embed in README.md)
+  ☐ create unit tests!
 
 After Open-Sourcing:
   ☐ configure/start travis automated builds (testing), already have .travis.yml
-  ☐ configure/enable greenkeeper automated dependency management (greenkeeper.io)
 
 ```
