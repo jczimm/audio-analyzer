@@ -1,5 +1,5 @@
 /* global __appdirname */
-/* global destPicker */
+/* global globals */
 
 const path = require('path');
 const fs = require('fs');

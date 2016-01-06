@@ -32,4 +32,3 @@ globals.destPicker = new FilePickerDialog();
 
 import FileWriter from './FileWriter';
 globals.fileWriter = new FileWriter();
-
