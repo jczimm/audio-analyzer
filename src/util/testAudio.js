@@ -7,7 +7,7 @@ import TestAudioAnalyzer from '../TestAudioAnalyzer';
 
 const testAudioAnalysisErrInfo = (e) => ({
     err: e,
-    msg: 'Audio analysis doesn\'t seem to be working..',
+    msg: 'Audio analysis doesn\'t seem to be working... Try again?',
     loc: 'util.testAudioAnalysis',
     notify: true,
 });
@@ -22,7 +22,7 @@ export default {
                 .then(resolve)
                 .catch((e) => {
                     reject(testAudioAnalysisErrInfo(e));
-                });
+                }); // handle error in testAudio.js
         });
     },
 };

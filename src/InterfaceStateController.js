@@ -4,39 +4,39 @@ import handleFiles from './handleFiles.js';
 
 
 // blank:		in blank state, track list is empty
+// handling:    (intermediate state) filtering & preparing the files; copying them to tmp, displaying them in the track list
 // idle:		track list has entries (an entry), entries may or may not be selected
+// testing:     (intermediate state) program is testing whether audio analysis is working
 // working:		program is analyzing track(s)
-// stopping:	(intermediate/pseudo state) analysis has been interrupted (by user or otherwise), going from working to idle state
+// stopping:	(intermediate state) analysis has been interrupted (by user or otherwise), going from working to idle state
 
-//                         +-----------------+
-//                         v                 |
-// +-----------+     +-----+-----+     +-----+-----+     : - - - - - :
-// |     -     |     |     .     |     |     %     |           x
-// |   Blank   | --> |   Idle    | --> |  Working  | - > >> Stopping |
-// |   .blank  |     |  .done?   |     |  .working |           v
-// +-----------+     +----+------+     +-----------+     : - - + - - :
-//                        ^                                    V
-//                        ^`<- <- <- <- <- <- <- <- <- <- <- <'/
+//                                       .-----------------------------.
+//                              ^`\      V--------------.              |
+// +-----------+    : - - - - -|:  v-----+-----+  : - - ? - - :  +-----?-----+    : - - - - - :
+// |     -     |         ...   `<<?|     .     |        ``       |     %     |          x
+// |   Blank   | -> >> Handling +> |   Idle    |-> >> Testing +> |  Working  | -> >> Stopping |
+// |   .blank  |      .handling    |  .done?   |                 |  .working |          v
+// +-----+-----+    : - - ? - - :  +----+------+  : - - - - - :  +-----------+    : - - + - - :
+//       ^                V             ^                                               V
+//       `<- <- <- <- <<-`/             `<- <- <- <- <- <- <- <- <- <- <- <- <- <- < <-'/
 
 //
 
 const states = {
 	blank() {
-		// currently, blank state is only set at init (it is the starting state)
-		// globals.$interface.addClass('blank').removeClass('done working');
-		// ^  uncomment if we're somehow going to go back to blank state from another state
+        globals.$interface.addClass('blank').removeClass('done working');
 	},
+    handling() {
+        globals.$interface.addClass('handling').removeClass('blank idle');
+    },
 	idle() {
-		// remove the classes corr to all possibles states from which the interface could now be changing
+		// remove the classes corresponding to all possibles states from which the interface could now be changing
 		// > this animates in the '#process-button' FAB (via CSS)
-		globals.$interface.removeClass('blank working');
+		globals.$interface.removeClass('handling working');
 
 		globals.actionButton.updateForState('idle');
 
-		// if all files are completed,
-		// TODO: wait unti file list is populated (have loader before)
-
-		globals.$interface.removeClass('done'); // re-setting below
+		globals.$interface.removeClass('done'); // re-setting below if applicable
 		if (!globals.fileList.areTracksLeftForAnalysis()) {
 			// add .done class
 			globals.$interface.addClass('done');

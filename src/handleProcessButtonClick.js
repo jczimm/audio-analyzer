@@ -51,36 +51,36 @@ function process(files) {
     processFiles(firstFiles, { beforeEachTrack, onOneTrackDone });
 }
 
-const maxTimesErred = 5;
+// audio analysis test disabled because not quite functional... **FIXME!
+// const maxTimesErred = 1;
 function start(files) {
-    let numErred = 0;
+    // let numErred = 0;
 
-    const tryTestAnalysis = () => {
-        console.log('%ctesting audio...', 'font-weight: 600; color: blue;');
-        util.testAudio.testAudioAnalysis().then((r) => {
-            console.log(r);
-            console.log('%ctest successful.', 'font-weight: 600; font-size: 1.2em; color: blue;');
-            //
+    // const tryTestAnalysis = () => {
+    //     console.log('%ctesting audio...', 'font-weight: 600; color: blue;');
+    //     util.testAudio.testAudioAnalysis().then((result) => {
+    //         console.log(result.analysis);
+    //         console.log('%ctest successful.', 'font-weight: 600; font-size: 1.2em; color: blue;');
+
             globals.interfaceStateController.state = 'working'; // go into working state (visually)
 
             console.log('%cprocessing...', 'font-weight: 600; font-size: 1.2em; color: blue;');
             process(files);
-            //
-        }).catch((errInfo) => {
-            //
-            if (numErred < maxTimesErred - 1) {
-                numErred++;
-                tryTestAnalysis();
-            } else {
-                console.log('%ctest failed.', 'font-weight: 600; font-size: 1.2em; color: red;');
-                globals.interfaceStateController.state = 'idle'; // [return to] idle state
-                util.handleError(errInfo);
-            }
-        });
-    };
+    //     }).catch((errInfo) => {
+    //         //
+    //         if (numErred < maxTimesErred - 1) {
+    //             numErred++;
+    //             tryTestAnalysis();
+    //         } else {
+    //             console.log('%ctest failed.', 'font-weight: 600; font-size: 1.2em; color: red;');
+    //             globals.interfaceStateController.state = 'idle'; // [return to] idle state
+    //             util.handleError(errInfo);
+    //         }
+    //     });
+    // };
 
-    globals.interfaceStateController.state = 'testing'; // show loading (waiting) button (icon)
-    tryTestAnalysis();
+    // globals.interfaceStateController.state = 'testing'; // show loading (waiting) button (icon)
+    // tryTestAnalysis();
 }
 
 export default function handleProcessButtonClick() {

@@ -91,4 +91,8 @@ export default class FileList {
 	areTracksLeftForAnalysis() {
 		return Array.includes($.map(this.files, file => file.completed === true), false);
 	}
+
+    areTracksLeft() {
+		return Object.keys(this.files).length > 0;
+	}
 }

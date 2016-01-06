@@ -37,12 +37,12 @@ export default class AudioAnalyzer {
 
         // if analysis is currently stopping or has been stopped (interface now in idle state),
         if (globals.interfaceStateController.isState('stopping') || globals.interfaceStateController.isState('idle')) {
-            this.progressBar.complete(); // bug-fixing bkp
             this.response.reject({
                 msg: 'oh, stopped... ignore me, just breaking the sequence',
                 loc: 'analyzeAudioTrack',
                 fine: true,
             });
+            this.progressBar.complete(); // bug-fixing bkp
         } else { // else, resolve results
             console.log('successfully created .afa file for %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(this.filePath));
 
@@ -185,6 +185,7 @@ export default class AudioAnalyzer {
             error() { },
             complete() { },
         },
+        customOnAudioReady, // optional
     }) {
         return new Promise((resolve, reject) => {
             // > lights...
@@ -229,7 +230,8 @@ export default class AudioAnalyzer {
             //       triggered when `audio.currentTime` is set to a value >= `audio.duration` in `analysis:${this.fileHash}` loop
             this.audio.addEventListener('ended', ::this.onAudioEnded, false);
             this.audio.addEventListener('error', ::this.onAudioError, false);
-            this.audio.addEventListener('canplaythrough', ::this.onAudioReady, false);
+                                                    // if custom `onAudioReady` handler provided, use it
+            this.audio.addEventListener('canplaythrough', this::(customOnAudioReady || this.onAudioReady), false);
 
             // > action! (`onAudioReady` is run when 'canplaythrough' event is triggered)
             this.audio.src = this.filePath;

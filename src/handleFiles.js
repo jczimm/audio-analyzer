@@ -14,6 +14,8 @@ const invalidFileFormatErrMsg = (filePath) => `${filePath}: Invalid file format 
 export default function handleFiles(files) {
     const filePaths = [];
 
+    globals.interfaceStateController.state = 'handling';
+
     // fill filePaths selectively
     let filePath, file; // `file` is of type File
     for (let i = 0; i < files.length; i++) {
@@ -22,6 +24,10 @@ export default function handleFiles(files) {
         // ignore file if invalid file type
         if (!isValidFileType(filePath)) {
             const errMsg = invalidFileFormatErrMsg(filePath);
+
+            // update the interface to idle state
+            globals.interfaceStateController.state = 'idle';
+
             util.handleError({
                 err: new Error(errMsg),
                 msg: errMsg,
@@ -36,19 +42,26 @@ export default function handleFiles(files) {
     if (filePaths[0]) {
         prepareFiles(filePaths)
             .then(([displayedFilePaths, errors]) => { // eslint-disable-line no-unused-vars
-                // if there are errors,
+                // if there are errors from displaying the files,
                 if (errors.filter(error => error !== undefined).length > 0) {
+                    // have util handle them
                     errors.forEach((err) => {
                         util.handleError(err);
                     });
-                    return;
                 }
-                // update the interface to idle state
+                // regardless, update the interface to idle state
                 globals.interfaceStateController.state = 'idle';
             })
             // `prepareFiles` rejects if from `util.copyFilesToTmp`
             .catch((err) => {
+                // update the interface to idle state
+                globals.interfaceStateController.state = 'idle';
                 util.handleError(err);
             });
+    } else { // but if there aren't any files that passed,
+        // update the interface back to blank state if there aren't any files in the list from before either
+        if (!globals.fileList.areTracksLeft()) {
+            globals.interfaceStateController.state = 'blank';
+        }
     }
 }

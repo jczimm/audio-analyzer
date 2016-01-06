@@ -182,20 +182,18 @@ input#upload {
     }
     div#banner {
         display: block;
-        position: fixed auto auto 1em 1em;
+        position: fixed;
         z-index: 4;
-        padding: 0.5em;
-        padding-bottom: 27px;
-        height: 1.4em;
-        background-color: $darker-grey-bg; // FIXME
-        border: 2px solid black;
+        padding: 1em;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+        border: 1px solid #e0e0e0 1px solid #e0e0e0 none none;
+        background-color: #fafafa;
         opacity: 0.9;
         pointer-events: none;
 
         > span {
-            color: $grey-accent;
-            font-size: 0.8em;
-            text-transform: uppercase;
+            color: #222;
+            font-size: 1.4em;
         }
 
         bottom: -100%;
@@ -231,6 +229,11 @@ input#upload {
     }
     // if interface is NOT blank, (if has tracks)
     &:not(.blank) {
+        // but in file-handling state,
+        &.handling {
+            // then show handling loader (TODO)
+            background-color: #eee;
+        }
         // and also done, ('done' = no tracks left to analyze)
         &.done {
             // then hide FAB below page
@@ -251,7 +254,8 @@ input#upload {
             // then show the banner
             // (program should be in a "ready" state for analysis, banner saying that new tracks can be dropped)
             div#banner {
-                bottom: 1em;
+                bottom: 0;
+                left: 0;
             }
         }
     }
