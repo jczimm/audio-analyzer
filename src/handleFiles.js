@@ -7,7 +7,7 @@ import util from './util';
 import prepareFiles from './prepareFiles.js';
 
 const validFileTypes = ['.wav', '.mp3'];
-const isValidFileType = (filePath) => Array.includes(validFileTypes, path.extname(path.basename(filePath)));
+const isValidFileType = (filePath) => validFileTypes.includes(path.extname(path.basename(filePath)));
 const invalidFileFormatErrMsg = (filePath) => `${filePath}: Invalid file format (currently, only .wav and .mp3 files are supported)`;
 
                     // `files` is of type FileList

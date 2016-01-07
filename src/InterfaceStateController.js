@@ -126,7 +126,7 @@ const handlersForStates = {
 const handlersForStatesStatesNames = Object.keys(handlersForStates);
 
 function bindElementsForState(newState) {
-	if (Array.includes(handlersForStatesStatesNames, newState)) {
+	if (handlersForStatesStatesNames.includes(newState)) {
 		handlersForStates[newState]();
 	} // (don't throw an error since we don't have handlers to bind for entering all states)
 }
@@ -145,7 +145,7 @@ export default class InterfaceStateController {
 	}
 
 	set state(newState) {
-		if (Array.includes(stateNames, newState)) {
+		if (stateNames.includes(newState)) {
 			state = newState;
 			this::states[newState](); // eslint-disable-line
 

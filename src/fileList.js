@@ -7,7 +7,7 @@ import util from './util';
 //
 
 function fileHasAlreadyBeenAdded(fileHash) {
-    return Array.includes($.map(this.files, file => file.fileHash === fileHash), true);
+    return $.map(this.files, file => file.fileHash === fileHash).includes(true);
 }
 const fileHasAlreadyBeenAddedErrMsg = (filePath) => `${filePath}: File is already in the track list`;
 
@@ -89,7 +89,7 @@ export default class FileList {
     }
 
 	areTracksLeftForAnalysis() {
-		return Array.includes($.map(this.files, file => file.completed === true), false);
+		return $.map(this.files, file => file.completed === true).includes(false);
 	}
 
     areTracksLeft() {

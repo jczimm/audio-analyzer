@@ -53,7 +53,7 @@ export default class ActionButton {
 
 	// returns boolean: whether to display the button
 	updateForState(newState) {
-		if (!Array.includes(stateNames, newState)) {
+		if (!stateNames.includes(newState)) {
 			throw new Error('Invalid state');
 		}
 
