@@ -9,3 +9,5 @@ dist
 
 # ignore unnecessary file
 util/injectResources.js
+
+commit-msg
