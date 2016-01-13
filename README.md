@@ -1,6 +1,7 @@
 # Audio Analyzer for MAV
 
 [![bitHound Overall Score](https://www.bithound.io/projects/badges/df793470-b26d-11e5-9547-3de35bd1f61d/score.svg)](https://www.bithound.io/github/jczimm/audio-analyzer)
+[![airbnb coding style](https://img.shields.io/badge/code%20style-airbnb-blue.svg)](https://github.com/airbnb/javascript)
 <!-- uncomment once public
 [![dependencies status](https://img.shields.io/david/jczimm/audio-analyzer.svg)](https://www.bithound.io/github/jczimm/audio-analyzer/master/dependencies/npm)
 [![dev dependencies status](https://img.shields.io/david/dev/jczimm/audio-analyzer.svg)](https://www.bithound.io/github/jczimm/audio-analyzer/master/dependencies/npm)
