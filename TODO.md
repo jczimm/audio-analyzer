@@ -94,5 +94,6 @@ Before Open-Sourcing:
 
 After Open-Sourcing:
   ☐ configure/start travis automated builds (testing), already have .travis.yml
+  ☐ add david-dm, travis badges to README.md
 
 ```

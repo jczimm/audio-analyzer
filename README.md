@@ -1,6 +1,12 @@
 # Audio Analyzer for MAV
 
-[![bitHound Code](https://www.bithound.io/projects/badges/df793470-b26d-11e5-9547-3de35bd1f61d/code.svg)](https://www.bithound.io/github/jczimm/audio-analyzer)
+[![bitHound Overall Score](https://www.bithound.io/projects/badges/df793470-b26d-11e5-9547-3de35bd1f61d/score.svg)](https://www.bithound.io/github/jczimm/audio-analyzer)
+<!-- uncomment once public
+[![dependencies status](https://img.shields.io/david/jczimm/audio-analyzer.svg)](https://www.bithound.io/github/jczimm/audio-analyzer/master/dependencies/npm)
+[![dev dependencies status](https://img.shields.io/david/dev/jczimm/audio-analyzer.svg)](https://www.bithound.io/github/jczimm/audio-analyzer/master/dependencies/npm)
+{travis badge}
+-->
+
 
 Desktop application that analyzes frequency data of individual audio tracks to generate corresponding analysis files (see [.afa file format](https://github.com/jczimm/afa-file)).  For Windows, OSX, and Linux.
 
