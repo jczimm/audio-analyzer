@@ -7,3 +7,5 @@ gulpfile.js
 src/mainOld.js
 
 **/*.asm.js
+
+typings/**
