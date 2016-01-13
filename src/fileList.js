@@ -62,7 +62,8 @@ export default class FileList {
 						.append($('<td/>').addClass('mdl-data-table__cell--non-numeric').text(fileName))
 						.append($('<td/>').addClass('track-length').text(_trackLengthPretty));
 
-					// add checkbox artificially (as opposed to reinitializing table as a MaterialDataTable so that checkboxes are generated)
+					// add checkbox artificially
+                    // (as opposed to reinitializing table as a MaterialDataTable
 
 					const $checkbox = $('<td/>').addClass('label').append(this.trackListTable.createCheckbox_($row.get(0)));
 					$row.prepend($checkbox);

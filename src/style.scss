@@ -231,10 +231,12 @@ input#upload {
     &:not(.blank) {
         // but in file-handling state,
         &.handling {
-            // then show handling loader (TODO)
-            background-color: #eee;
+            // then show handling loader
+            > button.mdl-button.action-button {
+                bottom: 0.7em !important;
+            }
         }
-        // and also done, ('done' = no tracks left to analyze)
+        // if also done, ('done' = no tracks left to analyze)
         &.done {
             // then hide FAB below page
             > button.mdl-button.action-button {

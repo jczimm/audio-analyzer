@@ -21,6 +21,7 @@ $('#exit-button').click(() => {
     ipc.sendSync('window', 'close');
 });
 
-const util = require('./util'); // not import because that is hoisted to top of scope, where necessary globals (e.g. `__appdirname`) have not yet been created
+// not an import because that is hoisted to top of scope, where necessary globals (e.g. `__appdirname`) have not yet been created
+const util = require('./util');
 $('#interface #track-list').click(util.stopPropagation);
 $('.mdl-menu.main, .mdl-menu.main *').click(util.stopPropagation);

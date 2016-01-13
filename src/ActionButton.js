@@ -8,6 +8,9 @@ const states = {
 			this.switchTo('processButton');
 		}
 	},
+    handling() {
+        this.switchTo('loadingButton');
+    },
     testing() {
         this.switchTo('loadingButton');
     },
@@ -31,8 +34,7 @@ function bindButtonsToHandlers() {
 //
 
 export default class ActionButton {
-
-	constructor(buttons = { $processButton: null, $stopButton: null, $loadingButton: null }) {
+    constructor(buttons = { $processButton: null, $stopButton: null, $loadingButton: null }) {
         this.buttons = buttons;
         this.buttonKeys = Object.keys(buttons);
 

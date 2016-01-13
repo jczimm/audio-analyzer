@@ -28,6 +28,8 @@ const states = {
 	},
     handling() {
         globals.$interface.addClass('handling').removeClass('blank idle');
+
+        globals.actionButton.updateForState('handling');
     },
 	idle() {
 		// remove the classes corresponding to all possibles states from which the interface could now be changing
@@ -156,6 +158,9 @@ export default class InterfaceStateController {
 	}
 
 	isState(_state) {
-		return this.state === _state;
+        // if passed an array,
+		return typeof _state === 'object'
+            ? _state.includes(this.state) // return if one of the elements is `this.state`
+            : this.state === _state; // else, return if `_state` is `this.state`
 	}
 }

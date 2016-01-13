@@ -37,7 +37,7 @@ export default class LoopsController {
 			// delete it from the loops obj (is time saved by deleting > time spent deleting?)
 			delete this.loops[loopId];
 			console.info('deleted loop %s', loopId);
-		} catch (e) {}
+		} catch (e) { /* */ }
 	}
 
 	clearInterval(intervalId) {
@@ -45,7 +45,7 @@ export default class LoopsController {
 			clearInterval(this.intervals[intervalId]);
 			delete this.intervals[intervalId];
 			console.info('cleared interval %s', intervalId);
-		} catch (e) {}
+		} catch (e) { /* */ }
 	}
 
 	clearLoops(loopIds = []) {

@@ -5,3 +5,5 @@ app.js
 gulpfile.js
 
 src/mainOld.js
+
+**/*.asm.js

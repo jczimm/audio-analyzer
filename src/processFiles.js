@@ -6,6 +6,12 @@ import util from './util';
 
 import AudioAnalyzer from './AudioAnalyzer';
 
+//
+
+const successStyling = 'font-weight: 600; font-size: 1.2em;';
+
+//
+
 function progressOpts({ onOneTrackDone, file, $progressBar, progressBar, $entry }) {
     return {
         analysis: {
@@ -137,7 +143,7 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
                     progressBar: saveOpts,
                 })
                     .then(() => {
-                        console.log('successfully saved .afa file for %c%s', 'font-weight: 600; font-size: 1.2em;', path.basename(tmpFilePath));
+                        console.log('successfully saved .afa file for %c%s', successStyling, path.basename(tmpFilePath));
                     }).catch((err) => {
                         if (!err.loc) err.loc = 'FileWriter#saveDatatoFile';
                         util.handleError(err);

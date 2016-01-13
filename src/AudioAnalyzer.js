@@ -36,7 +36,7 @@ export default class AudioAnalyzer {
         }
 
         // if analysis is currently stopping or has been stopped (interface now in idle state),
-        if (globals.interfaceStateController.isState('stopping') || globals.interfaceStateController.isState('idle')) {
+        if (globals.interfaceStateController.isState(['stopping', 'idle'])) {
             this.response.reject({
                 msg: 'oh, stopped... ignore me, just breaking the sequence',
                 loc: 'analyzeAudioTrack',
@@ -105,7 +105,8 @@ export default class AudioAnalyzer {
 
         // if fast mode, create analysis interval
         if (this.mode === 'fast') {
-            globals.loopsController.createInterval(`analysis:${this.fileHash}`, this.analysisInterval(), { interval: this.analysisIntervalInterval });
+            globals.loopsController.createInterval(`analysis:${this.fileHash}`, this.analysisInterval(),
+                { interval: this.analysisIntervalInterval });
         } else { // else, create analysis loop
             globals.loopsController.createLoop(`analysis:${this.fileHash}`, this.analysisLoop());
         }
@@ -117,7 +118,7 @@ export default class AudioAnalyzer {
     analysisLoop() {
         let frequencies;
         return (next) => {
-            if (this.doneAnalyzing || globals.interfaceStateController.isState('stopping') || globals.interfaceStateController.isState('idle')) {
+            if (this.doneAnalyzing || globals.interfaceStateController.isState(['stopping', 'idle'])) {
                 this.doneAnalyzing = true;
                 return next('break');
             }
@@ -143,7 +144,7 @@ export default class AudioAnalyzer {
     analysisInterval() {
         let frequencies;
         return () => {
-            if (this.doneAnalyzing || globals.interfaceStateController.isState('stopping') || globals.interfaceStateController.isState('idle')) {
+            if (this.doneAnalyzing || globals.interfaceStateController.isState(['stopping', 'idle'])) {
                 this.doneAnalyzing = true;
                 return 'break';
             }
@@ -164,7 +165,7 @@ export default class AudioAnalyzer {
 
     progressInterval() {
         return () => {
-            if (this.doneAnalyzing || globals.interfaceStateController.isState('stopping') || globals.interfaceStateController.isState('idle')) {
+            if (this.doneAnalyzing || globals.interfaceStateController.isState(['stopping', 'idle'])) {
                 this.doneAnalyzing = true;
                 return 'break';
             }

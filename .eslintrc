@@ -11,7 +11,8 @@
 		}],
 		"no-console": 0,
 		"no-loop-func": 0,
-		"no-cond-assign": [2, "except-parens"]
+		"no-cond-assign": [2, "except-parens"],
+        "max-len": [2, 140, 4]
 	},
 	"globals": {
 		"$": "false",
