@@ -63,7 +63,7 @@
     "cz-conventional-changelog": "^1.1.5",
     "diff-parse": "0.0.13",
     "electron-builder": "^2.3.0",
-    "electron-connect": "^0.3.3",
+    "electron-connect": "^0.3.5",
     "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.36.3",
     "eslint": "^1.10.3",
