@@ -1,5 +1,7 @@
 # Audio Analyzer for MAV
 
+Desktop application that analyzes frequency data of individual audio tracks to generate corresponding analysis files (see [.afa file format](https://github.com/jczimm/afa-file)).  For Windows, OSX, and Linux.
+
 [![bitHound Overall Score](https://www.bithound.io/projects/badges/df793470-b26d-11e5-9547-3de35bd1f61d/score.svg)](https://www.bithound.io/github/jczimm/audio-analyzer)
 [![airbnb coding style](https://img.shields.io/badge/code%20style-airbnb-blue.svg)](https://github.com/airbnb/javascript)
 <!-- uncomment once public
@@ -7,9 +9,6 @@
 [![dev dependencies status](https://img.shields.io/david/dev/jczimm/audio-analyzer.svg)](https://www.bithound.io/github/jczimm/audio-analyzer/master/dependencies/npm)
 {travis badge}
 -->
-
-
-Desktop application that analyzes frequency data of individual audio tracks to generate corresponding analysis files (see [.afa file format](https://github.com/jczimm/afa-file)).  For Windows, OSX, and Linux.
 
 > TODO: test for OSX and Linux (multiple versions)
 
@@ -45,7 +44,6 @@ npm install
 ### Repo Structure
 
 ```
-audio-analyzer/
 ├── app/					Application source is built into here
 ├── app.js				Controls Electron's main process
 ├── assets/				Assets used by packaged application, installers
@@ -54,6 +52,7 @@ audio-analyzer/
 │   ...
 ├── packager.json			Used by `electron-builder` for packaging the application 
 │   ...
+├── scripts/              Shell/batch scripts used by the application build/packaging pipeline
 ├── src/					Application source
 │   │   ...
 │   ├── index.html		Electron app entry point
@@ -62,6 +61,7 @@ audio-analyzer/
 │   │   ...
 │   ├── package.json		Used for app entry in packaged application
 │   └── ...
+├── typings/              Typescript files used by VSCode (dev only)
 └── util/					Development utility scripts (used in app.js and gulpfile.js)
 ```
 
@@ -73,21 +73,23 @@ To open the application and reload the brower window upon changes in `src` and t
 gulp dev
 ```
 
-To simulate the application in "production" (in a non-development environment):
+> Effectively runs `electron app/app.js` and `gulp watch`  
+
+To simulate the application "in production" (in a non-development environment):
 
 ```sh
-electron app
+electron app/
 ```
 
-### Building the Application
+To build the application's source:
 
 ```sh
 gulp build
 ```
 
-> Transpiles ES6 javascript, compiles scss, and copies the rest from `src/` -- and `app.js` -- into `app/`
+> Transpiles ES6 javascript, compiles scss, and copies the rest from src/ - and app.js - into app/
 
-### Packaging the Application 
+#### Packaging the Application 
 
 ```sh
 # Package for both Windows and OSX
@@ -109,7 +111,7 @@ npm run build:osx
 [//]: # (**Note:** Windows does not support packaging the app for OSX as it involves symlinks, which Windows cannot create.)
 
 
-### Generating Installers
+#### Generating Installers
 
 ```sh
 # Generate installers for both Windows and OSX
@@ -122,7 +124,22 @@ npm run pack:win
 npm run pack:osx
 ```
 
-> Generates installers for the packaged application (outputs to `dist/`)
+> Generates installers for the packaged application (outputs to dist/)
+
+#### To do all the above
+
+```sh
+# Export for both Windows and OSX
+npm run export
+
+# Export for Windows
+npm run export:win
+
+# Export for OSX
+npm run export:osx
+```
+
+> Builds, packages, and generates installers (runs `build` and `pack`)
 
 
 ## Documentation
