@@ -1,0 +1,5 @@
+#!/bin/sh
+electron-builder "dist/win/Audio Analyzer for MAV-win32-ia32" \
+    --platform=win \
+    --out=dist/win \
+    --config=packager.json

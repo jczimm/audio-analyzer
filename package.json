@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "postinstall": "./scripts/postinstall.sh",
+    "postinstall": "bash ./scripts/postinstall",
     "start": "electron ./app",
     "dev": "gulp dev",
     "lint": "gulp lint",
@@ -13,15 +13,15 @@
     "clean:win": "rm -rf ./dist/win",
     "build": "npm run build:osx && npm run build:win",
     "build:update": "npm run build:osx:update && npm run build:win:update",
-    "_build:osx": "npm run clean:osx && electron-packager ./app \"Audio Analyzer for MAV\" --ignore=\"node_modules/(^electron|^gulp|^babel|^eslint)\" --out=dist/osx --platform=darwin --arch=x64 --version=0.33.0 --icon=assets/osx/audio-analyzer.icns",
+    "_build:osx": "npm run clean:osx && sh ./scripts/build-osx",
     "build:osx": "gulp build --force && npm run _build:osx",
     "build:osx:update": "gulp build && npm run _build:osx",
-    "_build:win": "npm run clean:win && electron-packager ./app \"Audio Analyzer for MAV\" --ignore=\"node_modules/(^electron|^gulp|^babel|^eslint)\" --out=dist/win --platform=win32 --arch=ia32 --version=0.33.0 --icon=assets/win/icon.ico",
+    "_build:win": "npm run clean:win && sh ./scripts/build-win",
     "build:win": "gulp build --force && npm run _build:win",
     "build:win:update": "gulp build && npm run _build:win",
     "pack": "npm run pack:osx && npm run pack:win",
-    "pack:osx": "electron-builder \"dist/osx/Audio Analyzer for MAV.app\" --platform=darwin --out=\"dist/osx\" --config=packager.json",
-    "pack:win": "electron-builder \"dist/win/Audio Analyzer for MAV-win32-ia32\" --platform=win --out=\"dist/win\" --config=packager.json",
+    "pack:osx": "sh ./scripts/pack-osx",
+    "pack:win": "sh ./scripts/pack-win",
     "export": "npm run export:osx && npm run export:win",
     "export:osx": "npm run build:osx && npm run pack:osx",
     "export:win": "npm run build:win && npm run pack:win"
@@ -80,7 +80,8 @@
     "gulp-rucksack": "^0.1.2",
     "gulp-sass": "^2.1.0",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-util": "^3.0.7"
+    "gulp-util": "^3.0.7",
+    "stripcolorcodes": "^0.1.0"
   },
   "config": {
     "commitizen": {

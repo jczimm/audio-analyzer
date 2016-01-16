@@ -1,0 +1,12 @@
+#!/bin/sh
+
+ELECTRON_VERSION=${npm_package_devDependencies_electron_prebuilt#^}
+
+electron-packager ./app "Audio Analyzer for MAV" \
+    --ignore="node_modules/(^electron|^gulp|^babel|^eslint)" \
+    --out=dist/osx \
+    --platform=darwin \
+    --arch=x64 \
+    --version="$ELECTRON_VERSION" \
+    --icon=assets/osx/audio-analyzer.icns
+    

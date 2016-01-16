@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ELECTRON_VERSION=${npm_package_devDependencies_electron_prebuilt#^}
+
+electron-packager ./app "Audio Analyzer for MAV" \
+    --ignore="node_modules/(^electron|^gulp|^babel|^eslint)" \
+    --out=dist/win \
+    --platform=win32 \
+    --arch=ia32 \
+    --version="$ELECTRON_VERSION" \
+    --icon=assets/win/icon.ico

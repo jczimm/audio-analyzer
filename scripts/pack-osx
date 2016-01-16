@@ -1,0 +1,5 @@
+#!/bin/sh
+electron-builder "dist/osx/Audio Analyzer for MAV.app" \
+    --platform=darwin \
+    --out=dist/osx \
+    --config=packager.json
