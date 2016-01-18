@@ -30,9 +30,7 @@ var electron;
 gulp.task('dev', ['build', '_serve']); // serve after build is complete
 
 // Declare `build` as a dependency (this task is only meant to be run after `build`)
-gulp.task('_serve', ['build'], function () {
-    gulp.start('serve');
-});
+gulp.task('_serve', ['build'], function () { gulp.start('serve'); });
 
 gulp.task('serve', function () {
     // live-reloading application for development
@@ -80,8 +78,12 @@ const DEST = './app/';
 const GLOBAL_EXCLUDE = ['!' + SRC_DIR + 'lib/*'];
 
 
-gulp.task('build', ['build:app-js', 'build:client', 'clean']);
+gulp.task('build', ['clean', '_build:app-js', '_build:client']);
 gulp.task('build:client', ['build:html', 'build:js', 'build:css', 'copy-lib', 'copy-the-rest']);
+
+// versions that wait for 'clean'
+gulp.task('_build:app-js', ['clean'], function (force) { gulp.start('build:app-js'); });
+gulp.task('_build:client', ['clean'], function (force) { gulp.start('build:client'); });
 
 gulp.task('build:app-js', function (force) {
     return gulp.src(APP_JS.concat(GLOBAL_EXCLUDE))
