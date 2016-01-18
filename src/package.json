@@ -9,7 +9,6 @@
   "license": "MIT",
   "dependencies": {
     "afa-file": "^1.0.7",
-    "fs-extra": "^0.24.0",
     "jquery": "^2.1.4",
     "web-audio-analyser": "^2.0.0"
   }

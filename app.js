@@ -4,18 +4,34 @@ var BrowserWindow = require('browser-window'); // Module to create native browse
 var ipc = require('electron').ipcMain;
 var dialog = require('dialog');
 
-var liveReloadClient = require('electron-connect').client;
+if (process.env.NODE_ENV === "development") {
+    var liveReloadClient = require('electron-connect').client;
+}
 
-var fs = require('fs-extra');
+var fs = require('fs');
 var path = require('path');
 
 var tmpDir = path.resolve(__dirname, 'tmp');
 
 // Remove tmp folder
-fs.removeSync(tmpDir);
+(function deleteFolderRecursive(path) {
+  if( fs.existsSync(path) ) {
+    fs.readdirSync(path).forEach(function(file, index){
+      var curPath = path + "/" + file;
+      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+})(tmpDir);
 
 // Recreate tmp folder
-if (!fs.existsSync(tmpDir)) {
+try {
+    fs.accessSync(tmpDir, fs.F_OK);
+} catch (e) {
     fs.mkdirSync(tmpDir);
 }
 
