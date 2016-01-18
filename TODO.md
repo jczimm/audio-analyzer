@@ -81,7 +81,7 @@ Dependencies:
   ☐ update 'electron-prebuilt'
 
 Development:
-  ☐ create a static/ folder at root and have gulp copy the lib/, test.wav, and other static files from there (when dirty) to the app/ folder
+  ✔ create a static/ folder at root and have gulp copy the lib/, test.wav, and other static files from there (when dirty) to the app/ folder
     (and have gulp clear app/ in build)
 
 Before Open-Sourcing:

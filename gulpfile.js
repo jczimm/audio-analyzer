@@ -12,7 +12,8 @@ var sourcemaps = require('gulp-sourcemaps'),
     babel = require('gulp-babel'),
     eslint = require('gulp-eslint'),
     changed = require('gulp-changed'),
-    gulpif = require('gulp-if');
+    gulpif = require('gulp-if'),
+    del = require('del');
 
 var util = require('./util');
 
@@ -21,6 +22,7 @@ var util = require('./util');
 process.env.NODE_ENV = "development";
 
 const SRC_DIR = './src/';
+const LIB_DIR = './lib/';
 const APP_JS = ['./app.js'];
 
 var electron;
@@ -78,8 +80,8 @@ const DEST = './app/';
 const GLOBAL_EXCLUDE = ['!' + SRC_DIR + 'lib/*'];
 
 
-gulp.task('build', ['build:app-js', 'build:client']);
-gulp.task('build:client', ['build:html', 'build:js', 'build:css', 'copy-the-rest']);
+gulp.task('build', ['build:app-js', 'build:client', 'clean']);
+gulp.task('build:client', ['build:html', 'build:js', 'build:css', 'copy-lib', 'copy-the-rest']);
 
 gulp.task('build:app-js', function (force) {
     return gulp.src(APP_JS.concat(GLOBAL_EXCLUDE))
@@ -130,6 +132,16 @@ gulp.task('build:css', function (force) {
         .pipe(gulp.dest(DEST));
 });
 
+const LIB_SRC = [LIB_DIR + '**/*.*'];
+const LIB_DEST = DEST + LIB_DIR;
+gulp.task('copy-lib', function (force) {
+    return gulp.src(LIB_SRC)
+        .pipe(changed(DEST, util.changedOpts(force))) // only let "dirty" files through
+        .pipe(debug()) // log all files that will be built
+
+        .pipe(gulp.dest(LIB_DEST));
+});
+
 // invert SRC paths that have already been built so that this task only copies everything else
 const MISC_SRC = util.uniq([].concat.apply([], [HTML_SRC, JS_SRC, CSS_SRC].map(util.invertGulpSrcPath))).concat([SRC_DIR + '**/*']);
 gulp.task('copy-the-rest', function (force) {
@@ -138,6 +150,11 @@ gulp.task('copy-the-rest', function (force) {
         .pipe(debug()) // log all files that will be built
 
         .pipe(gulp.dest(DEST));
+});
+
+gulp.task('clean', function (force) {
+    if (force) return del(DEST);
+    return;
 });
 
 // linting
