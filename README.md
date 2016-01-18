@@ -20,11 +20,12 @@ Desktop application that analyzes frequency data of individual audio tracks to g
 - [Developers](#developers)
   - [Repo Structure](#repo-structure)
   - [Development](#development)
-  - [Building the Application](#building-the-application)
-  - [Packaging the Application](#packaging-the-application)
-  - [Generating Installers](#generating-installers)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
+    - [Building the Application](#building-the-application)
+    - [Generating Installers](#generating-installers)
+      - [Building & Generating Installers](#building-&-generating-installers)
+  - [Source Documentation](#source-documentation)
+  - [Contributing](#contributing)
+- [Program Documentation](#program-documentation)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -49,7 +50,9 @@ npm install
 ├── assets/				Assets used by packaged application, installers
 │   ...
 ├── dist/					Application is packaged into here (releases, installers)
+├── gulpfile.js           Tasks build application *source* into app/
 │   ...
+├── package.json          Scripts build/package *application* into dist/
 ├── packager.json			Used by `electron-builder` for packaging the application 
 │   ...
 ├── scripts/              Shell/batch scripts used by the application build/packaging pipeline
@@ -67,7 +70,7 @@ npm install
 
 ### Development
 
-To open the application and reload the brower window upon changes in `src` and the renderer upon changes to `app.js`:
+To open the application and reload the brower window upon changes in src/ and the renderer upon changes to app.js:
 
 ```sh
 gulp dev
@@ -89,7 +92,7 @@ gulp build
 
 > Transpiles ES6 javascript, compiles scss, and copies the rest from src/ - and app.js - into app/
 
-#### Packaging the Application 
+#### Building the Application
 
 ```sh
 # Package for both Windows and OSX
@@ -126,7 +129,7 @@ npm run pack:osx
 
 > Generates installers for the packaged application (outputs to dist/)
 
-#### To do all the above
+##### Building & Generating Installers
 
 ```sh
 # Export for both Windows and OSX
@@ -139,15 +142,18 @@ npm run export:win
 npm run export:osx
 ```
 
-> Builds, packages, and generates installers (runs `build` and `pack`)
+> Builds source, builds application, and generates installers (runs `build` and `pack`)
 
+### Source Documentation
 
-## Documentation
+> TODO
+
+### Contributing
 
 > TODO
 
 
-## Contributing
+## Program Documentation
 
 > TODO
 
