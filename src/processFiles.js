@@ -114,7 +114,7 @@ export default function processFiles(files, { beforeEachTrack, onOneTrackDone })
 
         // PROGRESS BAR
 
-        progressBar = util.loadingStates.createProgressBar( /* "indeterminate" */);
+        progressBar = util.loadingStates.createProgressBar(/* "indeterminate" */);
         $progressBar = $(progressBar.element_);
 
         $entry.append($progressBar);

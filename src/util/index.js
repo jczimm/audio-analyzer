@@ -55,7 +55,7 @@ util.copyFile = function copyFile(sourcePath, destDir) {
 
 		writeStream.on('error', (err) => {
 			reject({
-				err: err,
+				err,
 				msg: `Error copying file`,
 				loc: 'util.copyFile',
                 args: [sourcePath, destDir],
@@ -194,7 +194,7 @@ util.hashFile = function hashFile(filePath) {
 
 		stream.on('error', (err) => {
 			const errorInfo = {
-				err: err,
+				err,
 				msg: `Error hashing file ${filePath}`,
 				loc: 'util.hashFile',
 				notify: true,
@@ -271,7 +271,7 @@ util.handleAudioLoadError = function handleAudioLoadError(e, reject) {
 	}
 
 	const errorInfo = {
-		err: err,
+		err,
 		msg: errMsg,
 		loc: 'util.handleAudioLoadError',
 		notify: undefined,

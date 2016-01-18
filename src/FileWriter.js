@@ -60,7 +60,7 @@ export default class FileWriter {
                     .catch((err) => {
                         progressBar.error();
                         reject({
-                            err: err,
+                            err,
                             msg: 'Error while gzipping file',
                             loc: 'AFAFile.prototype.toGzipped',
                             notify: true,

@@ -12,7 +12,8 @@
 		"no-console": 0,
 		"no-loop-func": 0,
 		"no-cond-assign": [2, "except-parens"],
-        "max-len": [2, 140, 4]
+        "max-len": [2, 140, 4],
+        "no-param-reassign": [2, { "props": false }]
 	},
 	"globals": {
 		"$": "false",
