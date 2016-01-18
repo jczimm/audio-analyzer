@@ -3,6 +3,7 @@ app/**
 
 app.js
 gulpfile.js
+util.js
 
 src/mainOld.js
 

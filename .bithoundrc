@@ -4,7 +4,7 @@
         "**/*.asm.js",
         "gulpfile.js",
         "app.js",
-        "util/**",
+        "util.js",
         "assets/**,
         "dist/**"
     ]
