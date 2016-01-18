@@ -5,8 +5,6 @@
 
 import util from './util';
 
-import notifications from './notifications';
-
 
 import processFiles from './processFiles';
 
@@ -90,7 +88,7 @@ export default function handleProcessButtonClick() {
         if (path !== undefined && path.length > 0) {
             start(globals.fileList.files);
         } else {
-            notifications.err({
+            util.notifications.err({
                 msg: 'Error: No destination directory was provided.',
                 action: {
                     text: 'Try Again',
