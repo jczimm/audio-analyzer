@@ -29,64 +29,56 @@ export default class FileList {
 		};
     }
 
-	// todo: turn into an async function
-    displayFile(filePath) {
+    async displayFile(filePath) {
 		const fileName = path.basename(filePath);
 
 		let trackLength;
 
-		return new Promise((resolve, reject) => {
-			Promise.all([util.getLengthOfAudioFile(filePath), util.hashFile(filePath)])
-				.then(([trackLengthSeconds, fileHash]) => {
-					// reject files that are already in fileList (those that have already been successfully added)
-					if (this::fileHasAlreadyBeenAdded(fileHash)) {
-						const errMsg = fileHasAlreadyBeenAddedErrMsg(filePath);
-						reject({
-							err: new Error('File has already been added'),
-							msg: errMsg,
-							loc: 'FileList.displayFile',
-							notify: true,
-						});
-						return;
-					}
+        try {
+            const [trackLengthSeconds, fileHash] = await Promise.all([util.getLengthOfAudioFile(filePath), util.hashFile(filePath)]);
+            if (this::fileHasAlreadyBeenAdded(fileHash)) {
+                return {
+                    err: new Error('File has already been added'),
+                    msg: fileHasAlreadyBeenAddedErrMsg(filePath),
+                    loc: 'FileList.displayFile',
+                    notify: true,
+                };
+            }
 
-					const _trackLengthPretty = util.convertSecondsToHHMMSS(trackLengthSeconds);
+            const _trackLengthPretty = util.convertSecondsToHHMMSS(trackLengthSeconds);
 
-					// <tr>
-					//     <td class="mdl-data-table__cell--non-numeric">Track Name.ext</td>
-					//     <td>hh:mm:ss</td>
-					// </tr>
+            // <tr>
+            //     <td class="mdl-data-table__cell--non-numeric">Track Name.ext</td>
+            //     <td>hh:mm:ss</td>
+            // </tr>
 
-					// build row
-					const $row = $('<tr/>')
-						.append($('<td/>').addClass('mdl-data-table__cell--non-numeric').text(fileName))
-						.append($('<td/>').addClass('track-length').text(_trackLengthPretty));
+            // build row
+            const $row = $('<tr/>')
+                .append($('<td/>').addClass('mdl-data-table__cell--non-numeric').text(fileName))
+                .append($('<td/>').addClass('track-length').text(_trackLengthPretty));
 
-					// add checkbox artificially
-                    // (as opposed to reinitializing table as a MaterialDataTable
+            // add checkbox artificially
+            // (as opposed to reinitializing table as a MaterialDataTable
 
-					const $checkbox = $('<td/>').addClass('label').append(this.trackListTable.createCheckbox_($row.get(0)));
-					$row.prepend($checkbox);
+            const $checkbox = $('<td/>').addClass('label').append(this.trackListTable.createCheckbox_($row.get(0)));
+            $row.prepend($checkbox);
 
-					$row.appendTo(globals.$trackList.find('> tbody'));
+            $row.appendTo(globals.$trackList.find('> tbody'));
 
-					// hacky... use MDL api to check the checkbox?
-					$row.find('input[type=checkbox]').click();
+            // hacky... use MDL api to check the checkbox?
+            $row.find('input[type=checkbox]').click();
 
-					trackLength = trackLengthSeconds;
-					this.addFile(filePath, { $entry: util.withRefs($row), trackLength, fileHash });
+            trackLength = trackLengthSeconds;
+            this.addFile(filePath, { $entry: util.withRefs($row), trackLength, fileHash });
 
-					resolve(filePath);
-				})
-				.catch((err) => {
-					err.notify = true;
-					err.args = [filePath];
+            return filePath;
+        } catch (err) {
+            err.notify = true;
+            err.args = [filePath];
 
-					// util.handleError(err);
-					reject(err);
-                    return {};
-				});
-		});
+            // util.handleError(err);
+            return err;
+        }
     }
 
 	areTracksLeftForAnalysis() {
