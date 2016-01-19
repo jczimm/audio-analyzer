@@ -14,7 +14,8 @@ var path = require('path');
 var tmpDir = path.resolve(__dirname, 'tmp');
 
 // Remove tmp folder
-(function deleteFolderRecursive(path) {
+var deleteFolderRecursive;
+(deleteFolderRecursive = function deleteFolderRecursive(path) {
   if( fs.existsSync(path) ) {
     fs.readdirSync(path).forEach(function(file, index){
       var curPath = path + "/" + file;
@@ -105,7 +106,7 @@ app.on('ready', function() {
         mainWindow = null;
 
         // Remove tmp folder
-        fs.removeSync(tmpDir);
+        deleteFolderRecursive(tmpDir);
 
         quitApp();
     });
