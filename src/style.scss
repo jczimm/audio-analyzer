@@ -9,7 +9,7 @@ $theme-color: rgb(63,81,181);
 $theme-color-fl: #304FFE; // "accent-fluorescent" (Indigo A700 https://www.google.com/design/spec/style/color.html#color-color-palette)
 $accent: rgb(255,110,64);
 
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic|Roboto+Mono);
+@import url(lib/fonts.css);
 * {
     box-sizing: border-box;
 }

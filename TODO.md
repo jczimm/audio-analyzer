@@ -86,7 +86,7 @@ Development:
 
 Before Open-Sourcing:
   ☐ test development experience (cloning, installing deps (incl dev deps), and using the npm scripts)
-  ☐ download icon font files and Roboto font files into assets/ and reference them from there (all resources must be offline for the application to be offline-compatible)
+  ✔ download icon font files and Roboto font files into assets/ and reference them from there (all resources must be offline for the application to be offline-compatible)
   ☐ provide a release to the repo (an installer + the packaged application (the folder with the .exe, .dll's, folders etc.))
   ☐ add a decent CONTRIBUTING.md (link from README.md)
   ☐ create a demo gif to demo the UI and usage process (what the user does) (embed in README.md)
