@@ -51,6 +51,7 @@ npm install
 │   ...
 ├── dist/					Application is packaged into here (releases, installers)
 ├── gulpfile.js           Tasks build application *source* into app/
+├── lib/                Static libraries used by the source; copied into app/ by gulpfile.js 
 │   ...
 ├── package.json          Scripts build/package *application* into dist/
 ├── packager.json			Used by `electron-builder` for packaging the application 
@@ -146,11 +147,11 @@ npm run export:osx
 
 ### Source Documentation
 
-> TODO
+> TODO!
 
 ### Contributing
 
-> TODO
+See the [contributing.md](CONTRIBUTING.md).
 
 
 ## Program Documentation
