@@ -4,6 +4,10 @@ const path = require('path');
 const fs = require('fs-extra');
 const crypto = require('crypto');
 
+//
+
+import memoize from 'memoizee';
+
 // GENERAL UTILITIES
 
 const util = {};
@@ -17,7 +21,7 @@ function _normalize(arr, { min, rangeChange, from }) {
 	return arr.map(val => (((val - min) * rangeChange) || 0) + from); // if max - min === 0, will yield NaN -> 0
 }
 
-util.normalize = function normalize(arr, { from = 0, to = 100, alreadyNormalized } = {}) { // alreadyNormalized?: { from, to }
+util.normalize = memoize(function normalize(arr, { from = 0, to = 100, alreadyNormalized } = {}) { // alreadyNormalized?: { from, to }
 	const targetRange = to - from;
 
 	// if no `alreadyNormalized` object was passed, normalize with the default behavior (min and max as the )
@@ -40,7 +44,7 @@ util.normalize = function normalize(arr, { from = 0, to = 100, alreadyNormalized
 	const range = alreadyNormalized.to - alreadyNormalized.from;
 	const rangeChange = targetRange / range;
 	return _normalize(arr, { min: alreadyNormalized.from, rangeChange, from });
-};
+});
 
 util.copyFile = function copyFile(sourcePath, destDir) {
 	return new Promise((resolve, reject) => {

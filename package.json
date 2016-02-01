@@ -13,18 +13,18 @@
     "clean:win": "rm -rf ./dist/win",
     "build": "npm run build:osx && npm run build:win",
     "build:update": "npm run build:osx:update && npm run build:win:update",
-    "_build:osx": "npm run clean:osx && sh ./scripts/build-osx",
     "build:osx": "gulp build --force && npm run _build:osx",
     "build:osx:update": "gulp build && npm run _build:osx",
-    "_build:win": "npm run clean:win && sh ./scripts/build-win",
+    "_build:osx": "sh ./scripts/build-osx",
     "build:win": "gulp build --force && npm run _build:win",
     "build:win:update": "gulp build && npm run _build:win",
+    "_build:win": "sh ./scripts/build-win",
     "pack": "npm run pack:osx && npm run pack:win",
     "pack:osx": "sh ./scripts/pack-osx",
     "pack:win": "sh ./scripts/pack-win",
     "export": "npm run export:osx && npm run export:win",
-    "export:osx": "npm run build:osx && npm run pack:osx",
-    "export:win": "npm run build:win && npm run pack:win"
+    "export:osx": "npm run clean:osx && npm run build:osx && npm run pack:osx",
+    "export:win": "npm run clean:win && npm run build:win && npm run pack:win"
   },
   "private": true,
   "repository": {
@@ -49,6 +49,7 @@
     "fs-extra": "^0.26.2",
     "jquery": "^2.1.4",
     "loop": "^2.1.2",
+    "memoizee": "^0.3.9",
     "web-audio-analyser": "^2.0.0"
   },
   "optionalDependencies": {
