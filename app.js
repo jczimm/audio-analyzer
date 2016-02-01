@@ -36,9 +36,6 @@ try {
     fs.mkdirSync(tmpDir);
 }
 
-// Report crashes to our server.
-require('crash-reporter').start();
-
 // Only show application logs.
 app.commandLine.appendSwitch('v', -1);
 app.commandLine.appendSwitch('vmodule', 'console=0');
