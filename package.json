@@ -54,7 +54,7 @@
   },
   "optionalDependencies": {
     "appdmg": "^0.3.2",
-    "rcedit": "^0.3.0"
+    "rcedit": "^0.4.0"
   },
   "devDependencies": {
     "babel-core": "^6.2.1",
