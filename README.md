@@ -151,7 +151,11 @@ npm run export:osx
 
 ### Contributing
 
-See the [contributing.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Todo
+
+See [TODO.md](TODO.md).
 
 
 ## Program Documentation
