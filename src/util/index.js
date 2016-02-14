@@ -21,7 +21,7 @@ function _normalize(arr, { min, rangeChange, from }) {
 	return arr.map(val => (((val - min) * rangeChange) || 0) + from); // if max - min === 0, will yield NaN -> 0
 }
 
-util.normalize = memoize(function normalize(arr, { from = 0, to = 100, alreadyNormalized } = {}) { // alreadyNormalized?: { from, to }
+util.normalize = function normalize(arr, { from = 0, to = 100, alreadyNormalized } = {}) { // alreadyNormalized?: { from, to }
 	const targetRange = to - from;
 
 	// if no `alreadyNormalized` object was passed, normalize with the default behavior (min and max as the )
@@ -44,7 +44,8 @@ util.normalize = memoize(function normalize(arr, { from = 0, to = 100, alreadyNo
 	const range = alreadyNormalized.to - alreadyNormalized.from;
 	const rangeChange = targetRange / range;
 	return _normalize(arr, { min: alreadyNormalized.from, rangeChange, from });
-});
+};
+util.normalize = memoize(util.normalize);
 
 util.copyFile = function copyFile(sourcePath, destDir) {
 	return new Promise((resolve, reject) => {
@@ -316,7 +317,7 @@ util.handleError = function handleError({ err, msg, loc, args, notify = false, f
 		content = err || msg;
 	}
 	// e.g. `ERR @ erreeFunction(argPassed1, argPassed2): ${err}`
-	const errorMsg = [(prefix + `@ ${loc}` + (typeof args === 'object' ? `(${args.join(', ') })` : '') + ':'), content];
+	const errorMsg = [(`${prefix}@ ${loc}${(typeof args === 'object' ? args.join(', ') : '')}:`), content];
 
 	// log error (console.info or console.error)
 	console[method](...errorMsg);
