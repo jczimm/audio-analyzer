@@ -25,6 +25,7 @@ Desktop application that analyzes frequency data of individual audio tracks to g
       - [Building & Generating Installers](#building-&-generating-installers)
   - [Source Documentation](#source-documentation)
   - [Contributing](#contributing)
+  - [Todo](#todo)
 - [Program Documentation](#program-documentation)
 - [License](#license)
 
