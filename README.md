@@ -3,6 +3,7 @@
 Desktop application that analyzes frequency data of individual audio tracks to generate corresponding analysis files (see [.afa file format](https://github.com/jczimm/afa-file)).  For Windows, OSX, and Linux.
 
 [![bitHound Overall Score](https://www.bithound.io/projects/badges/df793470-b26d-11e5-9547-3de35bd1f61d/score.svg)](https://www.bithound.io/github/jczimm/audio-analyzer)
+[![Code Climate](https://codeclimate.com/repos/56c785556356c72ca000cfc3/badges/40f76f2fe72b608559d3/gpa.svg)](https://codeclimate.com/repos/56c785556356c72ca000cfc3/feed)
 [![airbnb coding style](https://img.shields.io/badge/code%20style-airbnb-blue.svg)](https://github.com/airbnb/javascript)
 <!-- uncomment once public
 [![dependencies status](https://img.shields.io/david/jczimm/audio-analyzer.svg)](https://www.bithound.io/github/jczimm/audio-analyzer/master/dependencies/npm)
