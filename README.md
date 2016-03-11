@@ -32,6 +32,8 @@ Desktop application that analyzes frequency data of individual audio tracks to g
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## :warning: EXPERIMENTAL!
+
 ## Getting Started
 
 Go ahead and [grab an installer](https://github.com/jczimm/audio-analyzer/releases).
