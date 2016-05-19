@@ -65,7 +65,7 @@
     "del": "^2.2.0",
     "diff-parse": "0.0.13",
     "electron-builder": "^2.3.0",
-    "electron-connect": "^0.3.7",
+    "electron-connect": "^0.4.1",
     "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.36.4",
     "eslint": "^1.10.3",
