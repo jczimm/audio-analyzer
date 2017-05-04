@@ -1,5 +1,7 @@
 # Audio Analyzer for MAV
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jczimm/audio-analyzer.svg?token=ad88d19c5cd17f8f7ac245d4529ff003a109bfd587f3b93adfa96f460b59ba83&ts=1493939119637)](https://greenkeeper.io/)
+
 Desktop application that analyzes frequency data of individual audio tracks to generate corresponding analysis files (see [.afa file format](https://github.com/jczimm/afa-file)).  For Windows, OSX, and Linux.
 
 [![bitHound Overall Score](https://www.bithound.io/projects/badges/df793470-b26d-11e5-9547-3de35bd1f61d/score.svg)](https://www.bithound.io/github/jczimm/audio-analyzer)
