@@ -1,3 +1,11 @@
+# :warning: This project was abandoned on March 11, 2016.
+
+I am open-sourcing this in case somebody finds value in it and wishes to fork the repo and build something out of it. (see [license](https://github.com/jczimm/audio-analyzer/blob/master/LICENSE))
+
+- jczimm :v:
+
+--
+
 # Audio Analyzer for MAV
 
 Desktop application that analyzes frequency data of individual audio tracks to generate corresponding analysis files (see [.afa file format](https://github.com/jczimm/afa-file)).  For Windows, OSX, and Linux.
